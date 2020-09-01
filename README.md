@@ -1,4 +1,7 @@
-# nbdev template
+# Pytorch Lightning Multi-Category Object Detection with Bounding Boxes Exploration
 
-Use this template to more easily create your nbdev project.
 
+
+## How to use
+
+Empty for now.
