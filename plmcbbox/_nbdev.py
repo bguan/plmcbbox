@@ -2,9 +2,30 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {}
+index = {"fetch_data": "00_pylightning_frcnn.ipynb",
+         "froot": "00_pylightning_frcnn.ipynb",
+         "fname": "00_pylightning_frcnn.ipynb",
+         "url": "00_pylightning_frcnn.ipynb",
+         "datadir": "00_pylightning_frcnn.ipynb",
+         "json_fname": "00_pylightning_frcnn.ipynb",
+         "CocoDatasetStats": "00_pylightning_frcnn.ipynb",
+         "stats": "00_pylightning_frcnn.ipynb",
+         "bbox_to_rect": "00_pylightning_frcnn.ipynb",
+         "label_for_bbox": "00_pylightning_frcnn.ipynb",
+         "overlay_img_bbox": "00_pylightning_frcnn.ipynb",
+         "SubCocoDataset": "00_pylightning_frcnn.ipynb",
+         "CocoDataModule": "00_pylightning_frcnn.ipynb",
+         "tiny_coco_dm": "00_pylightning_frcnn.ipynb",
+         "tdl": "00_pylightning_frcnn.ipynb",
+         "model": "00_pylightning_frcnn.ipynb",
+         "in_features": "00_pylightning_frcnn.ipynb",
+         "model.roi_heads.box_predictor": "00_pylightning_frcnn.ipynb",
+         "images": "00_pylightning_frcnn.ipynb",
+         "targets": "00_pylightning_frcnn.ipynb",
+         "output": "00_pylightning_frcnn.ipynb",
+         "FRCNN": "00_pylightning_frcnn.ipynb"}
 
-modules = []
+modules = ["pylightning_frcnn.py"]
 
 doc_url = "https://bguan.github.io/plmcbbox"
 
