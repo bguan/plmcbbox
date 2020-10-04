@@ -2,8 +2,11 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"fetch_data": "00_pylightning_frcnn.ipynb",
-         "CocoDatasetStats": "00_pylightning_frcnn.ipynb",
+index = {"fetch_data": "30_subcoco_ivf.ipynb",
+         "empty_list": "30_subcoco_ivf.ipynb",
+         "empty_set": "00_pylightning_frcnn.ipynb",
+         "cat_2_empty_set": "00_pylightning_frcnn.ipynb",
+         "CocoDatasetStats": "30_subcoco_ivf.ipynb",
          "bbox_to_rect": "00_pylightning_frcnn.ipynb",
          "label_for_bbox": "00_pylightning_frcnn.ipynb",
          "overlay_img_bbox": "00_pylightning_frcnn.ipynb",
@@ -13,9 +16,13 @@ index = {"fetch_data": "00_pylightning_frcnn.ipynb",
          "iou_calc": "00_pylightning_frcnn.ipynb",
          "accuracy_1img": "00_pylightning_frcnn.ipynb",
          "FRCNN": "00_pylightning_frcnn.ipynb",
-         "digest_pred": "00_pylightning_frcnn.ipynb"}
+         "digest_pred": "00_pylightning_frcnn.ipynb",
+         "load_stats": "30_subcoco_ivf.ipynb",
+         "SubCocoParser": "30_subcoco_ivf.ipynb"}
 
-modules = ["pylightning_frcnn.py"]
+modules = ["pylightning_frcnn.py",
+           "icevision_example.py",
+           "subcoco_ivf.py"]
 
 doc_url = "https://bguan.github.io/plmcbbox"
 
