@@ -255,8 +255,8 @@ if __name__ == "__main__":
     stats = load_stats(train_json, img_dir=img_dir)
     parser = SubCocoParser(stats)
     train_records, valid_records = parser.parse()
-    bs=36
-    acc_cycs = 3
+    bs=32
+    acc_cycs = 4
     size=384
     train_tfms = tfms.A.Adapter([*tfms.A.aug_tfms(size=size, presize=size+128), tfms.A.Normalize(mean=stats.chn_means, std=stats.chn_stds)])
     valid_tfms = tfms.A.Adapter([*tfms.A.resize_and_pad(size), tfms.A.Normalize(mean=stats.chn_means, std=stats.chn_stds)])
