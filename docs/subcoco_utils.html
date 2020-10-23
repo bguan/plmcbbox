@@ -141,7 +141,8 @@ nb_path: "10_subcoco_utils.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>100%|██████████| 801038/801038 [00:00&lt;00:00, 26422221.86it/s]</pre>
+<pre>100%|██████████| 801038/801038 [00:00&lt;00:00, 5006096.91it/s]
+</pre>
 </div>
 </div>
 
@@ -149,14 +150,6 @@ nb_path: "10_subcoco_utils.ipynb"
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Downloaded 801038 from http://files.fast.ai/data/examples/coco_tiny.tgz to /tmp/coco_tiny.tgz, extracted in /tmp: [&#39;coco_tiny&#39;, &#39;coco_tiny/train&#39;, &#39;coco_tiny/train/000000283257.jpg&#39;],...,[&#39;coco_tiny/train/000000291016.jpg&#39;, &#39;coco_tiny/train/000000193881.jpg&#39;, &#39;coco_tiny/train.json&#39;]
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
 </pre>
 </div>
 </div>
@@ -301,7 +294,7 @@ nb_path: "10_subcoco_utils.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>100%|██████████| 200/200 [00:00&lt;00:00, 973.89it/s]
+<pre>100%|██████████| 200/200 [00:00&lt;00:00, 280.46it/s]
 </pre>
 </div>
 </div>
@@ -1363,21 +1356,35 @@ inheritance.</p>
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>GPU available: True, used: True
+GPU available: True, used: True
+GPU available: True, used: True
 TPU available: False, using: 0 TPU cores
-LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-
-  | Name  | Type       | Params
--------------------------------------
-0 | model | FasterRCNN | 41 M  
-&lt;ipython-input-26-d2cd555a1c6d&gt;:37: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  return torch.tensor(accu)
-/home/brian_guan_gmail_com/.local/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The validation_epoch_end should not return anything as of 9.1.to log, use self.log(...) or self.write(...) directly in the LightningModule
+TPU available: False, using: 0 TPU cores
+TPU available: False, using: 0 TPU cores
+CUDA_VISIBLE_DEVICES: [0]
+CUDA_VISIBLE_DEVICES: [0]
+CUDA_VISIBLE_DEVICES: [0]
+/home/brian/.local/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:37: UserWarning: Could not log computational graph since the `model.example_input_array` attribute is not set or `input_array` was not given
   warnings.warn(*args, **kwargs)
-Saving latest checkpoint...
 
   | Name  | Type       | Params
 -------------------------------------
 0 | model | FasterRCNN | 41 M  
+
+  | Name  | Type       | Params
+-------------------------------------
+0 | model | FasterRCNN | 41 M  
+
+  | Name  | Type       | Params
+-------------------------------------
+0 | model | FasterRCNN | 41 M  
+&lt;ipython-input-26-19cbb3223700&gt;:38: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  return torch.tensor(accu)
+/home/brian/.local/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:37: RuntimeWarning: The metric you returned 0.0 must be a `torch.Tensor` instance, checkpoint not saved HINT: what is the value of val_acc in validation_epoch_end()?
+  warnings.warn(*args, **kwargs)
+Saving latest checkpoint..
+Saving latest checkpoint..
+Saving latest checkpoint..
 </pre>
 </div>
 </div>
@@ -1386,6 +1393,25 @@ Saving latest checkpoint...
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+  | Name  | Type       | Params
+-------------------------------------
+0 | model | FasterRCNN | 41 M  
+
+  | Name  | Type       | Params
+-------------------------------------
+0 | model | FasterRCNN | 41 M  
+
+  | Name  | Type       | Params
+-------------------------------------
+0 | model | FasterRCNN | 41 M  
 </pre>
 </div>
 </div>

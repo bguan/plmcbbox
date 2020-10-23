@@ -91,6 +91,23 @@ nb_path: "30_subcoco_pl.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;categories&#39;</span><span class="p">],</span> <span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;annotations&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -125,23 +142,6 @@ nb_path: "30_subcoco_pl.ipynb"
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;categories&#39;</span><span class="p">],</span> <span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;annotations&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;image_id&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">train_json</span><span class="p">[</span><span class="s1">&#39;images&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Digest-the-Dataset-for-useful-Stats">Digest the Dataset for useful Stats<a class="anchor-link" href="#Digest-the-Dataset-for-useful-Stats"> </a></h2><p>Do some basic analysis of the data to get numbers like total images, boxes, and average box count per image...</p>
@@ -152,6 +152,28 @@ nb_path: "30_subcoco_pl.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Categories </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_cats</span><span class="si">}</span><span class="s2">, Images </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_imgs</span><span class="si">}</span><span class="s2">, Boxes </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_bboxs</span><span class="si">}</span><span class="s2">, avg (w,h) </span><span class="si">{</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_width</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">avg_height</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;avg cats/img </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_ncats_per_img</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, avg boxs/img </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_nboxs_per_img</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, avg boxs/cat </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_nboxs_per_cat</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image means by channel </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">chn_means</span><span class="si">}</span><span class="s2">, std.dev by channel </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">chn_stds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="p">{</span> <span class="n">stats</span><span class="o">.</span><span class="n">cat2name</span><span class="p">[</span><span class="n">stats</span><span class="o">.</span><span class="n">lbl2cat</span><span class="p">[</span><span class="n">lid</span><span class="p">]]:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ibs</span><span class="p">)</span> <span class="k">for</span> <span class="n">lid</span><span class="p">,</span> <span class="n">ibs</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">l2ibs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -180,28 +202,6 @@ Image means by channel [115.64436835 103.2992867   91.73613059], std.dev by chan
 
 </div>
 
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;Categories </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_cats</span><span class="si">}</span><span class="s2">, Images </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_imgs</span><span class="si">}</span><span class="s2">, Boxes </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_bboxs</span><span class="si">}</span><span class="s2">, avg (w,h) </span><span class="si">{</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_width</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">avg_height</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;avg cats/img </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_ncats_per_img</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, avg boxs/img </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_nboxs_per_img</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, avg boxs/cat </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_nboxs_per_cat</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image means by channel </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">chn_means</span><span class="si">}</span><span class="s2">, std.dev by channel </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">chn_stds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="p">{</span> <span class="n">stats</span><span class="o">.</span><span class="n">cat2name</span><span class="p">[</span><span class="n">stats</span><span class="o">.</span><span class="n">lbl2cat</span><span class="p">[</span><span class="n">lid</span><span class="p">]]:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ibs</span><span class="p">)</span> <span class="k">for</span> <span class="n">lid</span><span class="p">,</span> <span class="n">ibs</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">l2ibs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 
@@ -338,6 +338,19 @@ But we have enough to test drive the training pipeline. To make it more balanced
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subcoco_dm</span> <span class="o">=</span> <span class="n">SubCocoDataModule</span><span class="p">(</span><span class="n">img_dir</span><span class="p">,</span> <span class="n">stats</span><span class="p">)</span>
+<span class="n">tdl</span><span class="o">=</span><span class="n">subcoco_dm</span><span class="o">.</span><span class="n">train_dataloader</span><span class="p">()</span>
+<span class="n">images</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -347,29 +360,11 @@ But we have enough to test drive the training pipeline. To make it more balanced
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(12, 12)</pre>
+<pre>(32, 32)</pre>
 </div>
 
 </div>
 
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">images</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tdl</span><span class="p">))</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 
@@ -401,7 +396,7 @@ But we have enough to test drive the training pipeline. To make it more balanced
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_training" class="doc_header"><code>run_training</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L68" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_training</code>(<strong><code>head_runs</code></strong>=<em><code>50</code></em>, <strong><code>full_runs</code></strong>=<em><code>200</code></em>)</p>
+<h4 id="run_training" class="doc_header"><code>run_training</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L64" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_training</code>(<strong><code>img_sz</code></strong>=<em><code>384</code></em>, <strong><code>bs</code></strong>=<em><code>12</code></em>, <strong><code>acc</code></strong>=<em><code>3</code></em>, <strong><code>workers</code></strong>=<em><code>4</code></em>, <strong><code>head_runs</code></strong>=<em><code>50</code></em>, <strong><code>full_runs</code></strong>=<em><code>200</code></em>)</p>
 </blockquote>
 
 </div>
@@ -417,54 +412,6 @@ But we have enough to test drive the training pipeline. To make it more balanced
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>GPU available: True, used: True
-TPU available: False, using: 0 TPU cores
-LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-
-  | Name  | Type       | Params
--------------------------------------
-0 | model | FasterRCNN | 41 M  
-/home/brian_guan_gmail_com/projects/mcbbox/mcbbox/subcoco_utils.py:562: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  return torch.tensor(accu)
-/home/brian_guan_gmail_com/.local/lib/python3.8/site-packages/pytorch_lightning/utilities/distributed.py:45: UserWarning: The validation_epoch_end should not return anything as of 9.1.to log, use self.log(...) or self.write(...) directly in the LightningModule
-  warnings.warn(*args, **kwargs)
-Epoch 0: val_acc reached 0.00000 (best 0.00000), saving model to /home/brian_guan_gmail_com/projects/mcbbox/models/FRCNN-coco_sample-head-epoch=0-val_acc=0.00.ckpt-v1.ckpt as top 1
-Saving latest checkpoint...
-GPU available: True, used: True
-TPU available: False, using: 0 TPU cores
-LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-  | Name  | Type       | Params
--------------------------------------
-0 | model | FasterRCNN | 41 M  
-</pre>
-</div>
-</div>
-
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -584,7 +531,7 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="save_final" class="doc_header"><code>save_final</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L88" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_final</code>()</p>
+<h4 id="save_final" class="doc_header"><code>save_final</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L85" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_final</code>()</p>
 </blockquote>
 
 </div>

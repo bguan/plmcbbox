@@ -46,8 +46,6 @@ index = {"fetch_data": "10_subcoco_utils.ipynb",
          "learn": "20_subcoco_ivf.ipynb",
          "run_training": "30_subcoco_pl.ipynb",
          "save_final": "30_subcoco_pl.ipynb",
-         "subcoco_dm": "30_subcoco_pl.ipynb",
-         "tdl": "30_subcoco_pl.ipynb",
          "frcnn_model": "30_subcoco_pl.ipynb"}
 
 modules = ["subcoco_utils.py",
