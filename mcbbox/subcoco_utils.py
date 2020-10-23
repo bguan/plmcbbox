@@ -547,7 +547,6 @@ class FRCNN(LightningModule):
         for param in self.model.parameters():
             param.requires_grad = True
         self.lr = self.lr / 10
-        self.configure_optimizers()
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
@@ -560,7 +559,7 @@ class FRCNN(LightningModule):
         accu = torch.zeros((len(preds), 1))
         for i, (p,t) in enumerate(zip(preds, targets)):
             accu[i] = accuracy_1img(p, t, .3, .3)
-        return torch.tensor(accu)
+        return accu
 
     def validation_step(self, val_batch, batch_idx):
         # validation runs the model in eval mode, so Y is prediction, not losses
@@ -578,7 +577,7 @@ class FRCNN(LightningModule):
         val_accs = np.concatenate([ (o['val_acc']).numpy() for o in outputs ])
         avg_acc = val_accs.mean()
         tensorboard_logs = {'val_acc': avg_acc}
-        return {'val_acc': avg_acc, 'logs': tensorboard_logs}
+        self.log_dict({'val_acc': avg_acc, 'logs': tensorboard_logs})
 
     def forward(self, x):
         self.model.eval()
