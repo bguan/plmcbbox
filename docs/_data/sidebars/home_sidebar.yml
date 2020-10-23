@@ -10,8 +10,15 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: Main Module
-      url: main.html
+      title: Common Utilities to Process Subcoco Dataset for both Pytorch Lightning
+        and FastAI
+      url: subcoco_utils.html
+    - output: web,pdf
+      title: Exploring Object Detection using Icevision w/ FastAI
+      url: subcoco_ivf.html
+    - output: web,pdf
+      title: Exploring Object Detection using Pytorch Lightning Only
+      url: subcoco_pl.html
     output: web
     title: mcbbox
   output: web

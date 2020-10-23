@@ -42,11 +42,13 @@ from PIL import Image, ImageStat
 from tqdm import tqdm
 from typing import Hashable, List, Tuple, Union
 
-from subcoco_utils import *
+from .subcoco_utils import *
 
 # Cell
 if __name__ == "__main__" and not is_notebook():
     projroot = Path.home()/"Projects"/"mcbbox"
+    os.chdir(projroot)
+    print(f"Current Working Directory = {os.getcwd()}")
     datadir = projroot/"workspace"
     froot = "coco_sample"
     fname = f"{froot}.tgz"
@@ -58,15 +60,15 @@ if __name__ == "__main__" and not is_notebook():
     with open(json_fname, 'r') as json_f:
         train_json = json.load(json_f)
     stats = load_stats(train_json, img_dir=img_dir)
-    parser = SubCocoParser(stats, min_margin_ratio = 0.05, min_width_height_ratio = 0.1)
-    train_records, valid_records = parser.parse(autofix=True)
-    bs=36
-    acc_cycs = 3
+    parser = SubCocoParser(stats, min_margin_ratio = 0.05, min_width_height_ratio = 0.05)
+    train_records, valid_records = parser.parse(autofix=False)
+    bs=32
+    acc_cycs = 4
     size=384
     train_tfms = tfms.A.Adapter([*tfms.A.aug_tfms(size=size, presize=size+128), tfms.A.Normalize(mean=stats.chn_means, std=stats.chn_stds)])
     valid_tfms = tfms.A.Adapter([*tfms.A.resize_and_pad(size), tfms.A.Normalize(mean=stats.chn_means, std=stats.chn_stds)])
     backbone_name = "tf_efficientdet_lite0"
-    model = efficientdet.model(model_name=backbone_name, img_size=size, num_classes=len(stats.cat2name))
+    model = efficientdet.model(model_name=backbone_name, img_size=size, num_classes=len(stats.cat2names))
     train_ds = Dataset(train_records, train_tfms)
     valid_ds = Dataset(valid_records, valid_tfms)
     train_dl = efficientdet.train_dl(train_ds, batch_size=bs//acc_cycs, num_workers=4, shuffle=True)
@@ -79,9 +81,8 @@ if __name__ == "__main__" and not is_notebook():
         SaveModelCallback(fname=save_model_fname, monitor=monitor_metric),
         EarlyStoppingCallback(monitor=monitor_metric, min_delta=0.001, patience=5)
     ]
-
     learn = efficientdet.fastai.learner(dls=[train_dl, valid_dl], model=model, metrics=metrics, cbs=callbacks)
     learn.freeze()
-    learn.fine_tune(100, 0.01, freeze_epochs=20) # small numbers just to test pipeline, to train useful model, use freeze 20, total 100
+    learn.fine_tune(1, 0.01, freeze_epochs=1) # small numbers just to test pipeline, to train useful model, use freeze 20, total 100
     model_save_path = projroot/"models"/f"{save_model_fname}-final.pth"
     torch.save(model.state_dict(), model_save_path)

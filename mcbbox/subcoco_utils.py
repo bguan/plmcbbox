@@ -34,7 +34,8 @@ from PIL import Image, ImageStat
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning import LightningDataModule, LightningModule, Trainer, TrainResult
+from pytorch_lightning import LightningDataModule, LightningModule, Trainer
+from pytorch_lightning.core.step_result import TrainResult
 from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
@@ -212,7 +213,7 @@ class SubCocoParser(Parser, LabelsMixin, BBoxesMixin, FilepathMixin, SizeMixin):
         skipped = 0
         for img_id, imgfname in stats.img2fname.items():
             imgf = stats.img_dir/imgfname
-            width, height = self.stats.img2sz[img_id]
+            width, height = stats.img2sz[img_id]
             bboxs = []
             lids = []
             for lid, x, y, w, h in stats.img2lbs[img_id]:
@@ -388,7 +389,7 @@ class SubCocoDataModule(LightningDataModule):
         transform=transforms.Compose([
             transforms.Resize(resize),
             transforms.ToTensor(),
-            transforms.Normalize(stats.chn_means/255, stats.chn_stds/255)
+            transforms.Normalize(stats.chn_means/255, stats.chn_stds/255) # need to divide by 255
         ])
 
         tgt_tfm = transforms.Compose([ TargetResize(stats, resize) ])
@@ -524,7 +525,7 @@ def accuracy_1img(pred, tgt, scut=0.5, ithr=0.5):
 
 # Cell
 class FRCNN(LightningModule):
-    def __init__(self, lbl2name:dict={}):
+    def __init__(self, lbl2name:dict={}, lr:float=1e-2):
         LightningModule.__init__(self)
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
         # lock the pretrained model body
@@ -540,12 +541,18 @@ class FRCNN(LightningModule):
         # replace the pre-trained head with a new one, which is trainable
         self.model.roi_heads.box_predictor = FastRCNNPredictor(self.in_features, self.num_classes+1)
 
+        self.lr = lr
+
+    def unfreeze(self):
+        for param in self.model.parameters():
+            param.requires_grad = True
+        self.lr = self.lr / 10
+
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
         losses = self.model(x, y)
         loss = sum(losses.values())
-        result = TrainResult(loss)
-        result.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        result = {'loss':loss, 'train_loss':loss}
         return result
 
     def metrics(self, preds, targets):
@@ -562,7 +569,7 @@ class FRCNN(LightningModule):
         return {'val_acc': accu} # should add 'val_acc' accuracy e.g. MAP, MAR etc
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
         return optimizer
 
     def validation_epoch_end(self, outputs):
