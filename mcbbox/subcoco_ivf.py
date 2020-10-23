@@ -67,7 +67,7 @@ def run_subcoco_ivf():
     train_tfms = tfms.A.Adapter([*tfms.A.aug_tfms(size=size, presize=size+128), tfms.A.Normalize(mean=stats.chn_means, std=stats.chn_stds)])
     valid_tfms = tfms.A.Adapter([*tfms.A.resize_and_pad(size), tfms.A.Normalize(mean=stats.chn_means, std=stats.chn_stds)])
     backbone_name = "tf_efficientdet_lite0"
-    model = efficientdet.model(model_name=backbone_name, img_size=size, num_classes=len(stats.cat2names))
+    model = efficientdet.model(model_name=backbone_name, img_size=size, num_classes=len(stats.lbl2name))
     train_ds = Dataset(train_records, train_tfms)
     valid_ds = Dataset(valid_records, valid_tfms)
     train_dl = efficientdet.train_dl(train_ds, batch_size=bs//acc_cycs, num_workers=4, shuffle=True)
