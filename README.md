@@ -18,4 +18,6 @@ Launch Jupter lab, open the Pytorch Lightning or FastAI based notebook and run!
 
 ### Run e.g. FastAI version of Subcoco script
 (Look at mcbbox/subcoco_ivf.py to see if that's what you want...)
-* On command line, run ```python mcbbox\subcoco_ivf.py```
+* Change directory to project level
+* On command line, run ```python run_subcoco_ivf.py``` or ```python run_subcoco_pl.py``` 
+* Go away for a day or so...
