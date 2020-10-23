@@ -19,7 +19,9 @@ index = {"fetch_data": "10_subcoco_utils.ipynb",
          "iou_calc": "10_subcoco_utils.ipynb",
          "accuracy_1img": "10_subcoco_utils.ipynb",
          "FRCNN": "10_subcoco_utils.ipynb",
-         "digest_pred": "10_subcoco_utils.ipynb"}
+         "digest_pred": "10_subcoco_utils.ipynb",
+         "run_subcoco_ivf": "20_subcoco_ivf.ipynb",
+         "run_subcoco_pl": "30_subcoco_pl.ipynb"}
 
 modules = ["subcoco_utils.py",
            "subcoco_ivf.py",
