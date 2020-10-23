@@ -11,7 +11,7 @@ _tmp*
 tmp*
 tags
 workspace
-model
+models
 lightning_logs
 
 # Byte-compiled / optimized / DLL files

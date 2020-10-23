@@ -1,9 +1,9 @@
-repository: bguan/plmcbbox
+repository: bguan/mcbbox
 output: web
-topnav_title: plmcbbox
-site_title: plmcbbox
+topnav_title: mcbbox
+site_title: mcbbox
 company_name: guan.us
-# github_editme_path: bguan/plmcbbox/
+# github_editme_path: bguan/mcbbox/
 use_math: true
 #google_analytics: UA-89522379-3
 #google_search: 000837339549978028235:mygjrpycyx2
@@ -57,6 +57,6 @@ sidebars:
 description: "Documentation for the Pytorch Lightning COCO Multi-Category Bounding Box Object Detection"
 theme: jekyll-theme-cayman
 
-baseurl: /plmcbbox
+baseurl: /mcbbox
 # url: https://docs.fast.ai
 twitter_username: bguan

@@ -13,6 +13,6 @@ entries:
       title: Main Module
       url: main.html
     output: web
-    title: plmcbbox
+    title: mcbbox
   output: web
   title: Sidebar

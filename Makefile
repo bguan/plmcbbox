@@ -6,7 +6,7 @@ all: lib docs
 
 lib: $(SRC)
 	nbdev_build_lib
-	touch plmcbbox
+	touch mcbbox
 
 docs_serve: docs
 	cd docs && bundle exec jekyll serve --incremental
