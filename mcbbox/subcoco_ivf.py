@@ -110,12 +110,10 @@ learn = efficientdet.fastai.learner(dls=[train_dl, valid_dl], model=model, metri
 learn.freeze()
 
 # Cell
-min_lr, epochs, freeze_epochs = 0.01, 200, 20
-print(f"Running with image size {size} for {freeze_epochs}+{epochs} epochs at min LR {min_lr}")
-
-# So this doesn't run upon import
-def run_training():
-    learn.fine_tune(epochs, min_lr, freeze_epochs=freeze_epochs)
+# Wrap in function this doesn't run upon import or when generating docs
+def run_training(min_lr=0.01, head_runs=20, full_runs=200):
+    print(f"Running with image size {size} for {head_runs}+{full_runs} epochs at min LR {min_lr}")
+    learn.fine_tune(full_runs, min_lr, freeze_epochs=head_runs)
 
 # Cell
 def save_final():

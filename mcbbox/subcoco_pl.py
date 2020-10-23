@@ -65,7 +65,8 @@ tdl=subcoco_dm.train_dataloader()
 # Cell
 frcnn_model = FRCNN(lbl2name=stats.lbl2name, lr=0.01)
 
-def run_training():
+def run_training(head_runs=50, full_runs=200):
+    print(f"Running {head_runs}+{full_runs} epochs.")
     chkpt_cb = ModelCheckpoint(
         filepath="models/FRCNN-"+froot+"-{epoch}-{val_acc:.2f}.ckpt",
         save_last=True,
@@ -74,13 +75,13 @@ def run_training():
         verbose=True,
     )
     # train head only
-    trainer = Trainer(gpus=1, max_epochs=50, checkpoint_callback=chkpt_cb, accumulate_grad_batches=3)
+    trainer = Trainer(gpus=1, max_epochs=head_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=3)
     trainer.fit(frcnn_model, subcoco_dm)
 
     frcnn_model.unfreeze() # allow finetuning of the backbone
 
     # finetune head and backbone
-    trainer = Trainer(gpus=1, max_epochs=100, checkpoint_callback=chkpt_cb, accumulate_grad_batches=3)
+    trainer = Trainer(gpus=1, max_epochs=full_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=3)
     trainer.fit(frcnn_model, subcoco_dm)
 
 # Cell
