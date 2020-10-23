@@ -547,6 +547,7 @@ class FRCNN(LightningModule):
         for param in self.model.parameters():
             param.requires_grad = True
         self.lr = self.lr / 10
+        configure_optimizers()
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
