@@ -111,5 +111,5 @@ def run_training(learn:Learner, min_lr=0.05, head_runs=1, full_runs=1):
     learn.fine_tune(full_runs, min_lr, freeze_epochs=head_runs)
 
 # Cell
-def save_final(save_model_fpath:str):
+def save_final(learn:Learner, save_model_fpath:str):
     torch.save(learn.model.state_dict(), save_model_fpath)
