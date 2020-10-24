@@ -11,6 +11,7 @@ import numpy as np
 import pickle
 import pytorch_lightning as pl
 import torch.nn.functional as F
+import torch.multiprocessing
 
 from collections import defaultdict
 from IPython.utils import io
@@ -40,6 +41,7 @@ from tqdm import tqdm
 from .subcoco_utils import *
 
 # Cell
+torch.multiprocessing.set_sharing_strategy('file_system')
 datadir = Path("workspace")
 
 froot = "coco_sample"

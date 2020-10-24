@@ -23,6 +23,7 @@ import requests
 import tarfile
 import sys
 import torch
+import torch.multiprocessing
 import torchvision
 import xml.etree.ElementTree
 
@@ -47,6 +48,7 @@ from typing import Hashable, List, Tuple, Union
 from .subcoco_utils import *
 
 # Cell
+torch.multiprocessing.set_sharing_strategy('file_system')
 datadir = Path("workspace")
 
 froot = "coco_sample"

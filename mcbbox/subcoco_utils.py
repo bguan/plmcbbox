@@ -373,7 +373,6 @@ class TargetResize():
         tgt['boxes'] = torch.tensor(tfm_boxes)
         return tgt
 
-
 # Cell
 class SubCocoDataModule(LightningDataModule):
 
