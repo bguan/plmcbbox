@@ -72,7 +72,7 @@ parser = SubCocoParser(stats, min_margin_ratio = 0.05, min_width_height_ratio = 
 train_records, valid_records = parser.parse(autofix=False)
 
 # Cell
-def gen_transforms_and_learner(img_size=128, bs=4, acc_cycs=8):
+def gen_transforms_and_learner(img_size=128, bs=4, acc_cycs=8, num_workers=2):
     train_tfms = tfms.A.Adapter([
         *tfms.A.aug_tfms(
             size=img_size,
@@ -88,8 +88,8 @@ def gen_transforms_and_learner(img_size=128, bs=4, acc_cycs=8):
     # I ran this model w img 512x512x3 on my Dell XPS15 w GTX-1050 with 4GB VRAM, 16GM RAM, ~20min/epoch.
     backbone_name = "tf_efficientdet_lite0"
     model = efficientdet.model(model_name=backbone_name, img_size=img_size, num_classes=len(stats.lbl2name))
-    train_dl = efficientdet.train_dl(train_ds, batch_size=bs, num_workers=6, shuffle=True)
-    valid_dl = efficientdet.valid_dl(valid_ds, batch_size=bs, num_workers=6, shuffle=False)
+    train_dl = efficientdet.train_dl(train_ds, batch_size=bs, num_workers=num_workers, shuffle=True)
+    valid_dl = efficientdet.valid_dl(valid_ds, batch_size=bs, num_workers=max(1,num_workers//2), shuffle=False)
 
     monitor_metric = 'COCOMetric'
     metrics = [ COCOMetric(metric_type=COCOMetricType.bbox)]

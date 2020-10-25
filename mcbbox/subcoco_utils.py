@@ -456,9 +456,9 @@ def iou_calc(x1,y1,w1,h1, x2,y2,w2,h2):
     b1 = y1+h1 # bottom of box1
     r2 = x2+w2 # right of box2
     b2 = y2+h2 # bottom of box2
-    a1 = w1*h1
-    a2 = w2*h2
-    ia = 0. # intercept
+    a1 = 1.0*w1*h1
+    a2 = 1.0*w2*h2
+    ia = 0.0 # intercept
     if x1 <= x2 <= r1:
         if y1 <= y2 <= b1:
             ia = (r1-x2)*(b1-y2)
@@ -469,8 +469,8 @@ def iou_calc(x1,y1,w1,h1, x2,y2,w2,h2):
             ia = (r1-r2)*(b1-y2)
         elif y1 <= b2 <= b1:
             ia = (r1-r2)*(b1-b2)
+    #print(a1, a2, ia)
     iou = ia/(a1+a2-ia)
-    # print(x1,y1,w1,h1, x2,y2,w2,h2,iou)
     return iou
 
 def accuracy_1img(pred, tgt, scut=0.5, ithr=0.5):
@@ -482,17 +482,20 @@ def accuracy_1img(pred, tgt, scut=0.5, ithr=0.5):
     tboxs = tgt['boxes']
     tls = tgt['labels']
     pls = pred['labels']
-    tlset = {l for l in tls}
+    tlset = {int(l) for l in tls}
 
     tl2num = defaultdict(lambda:0)
-    for tl in tls: tl2num[tl]+=1
+    for tl in tls: tl2num[int(tl)]+=1
+    # print(f"Target Labels -> num of boxes {tl2num}")
 
     tlpls = []
     for tl,tb in zip(tls,tboxs):
+        x1,y1,w1,h1 = float(tb[0]), float(tb[1]), float(tb[2]), float(tb[3])
         for pl,pb in zip(pls,pboxs):
-            iou = iou_calc(*tb, *pb)
+            x2,y2,w2,h2 = float(pb[0]), float(pb[1]), float(pb[2]), float(pb[3])
+            iou = iou_calc(x1,y1,w1,h1, x2,y2,w2,h2)
             # print(iou)
-            if iou > ithr: tlpls.append((tl,pl))
+            if iou > ithr: tlpls.append((int(tl),int(pl)))
 
     tl2tpfp = defaultdict(lambda: (0,0))
     for tl in tlset:
@@ -503,6 +506,7 @@ def accuracy_1img(pred, tgt, scut=0.5, ithr=0.5):
             else:
                 fp+=1
             tl2tpfp[tl] = (tp, fp)
+    # print(f"Target Labels -> (True+, False+): {tl2tpfp}")
 
     tl2f1 = {}
     for tl in tlset:
