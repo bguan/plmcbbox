@@ -63,8 +63,8 @@ stats = load_stats(train_json, img_dir=img_dir, force_reload=False)
 # Cell
 frcnn_model = FRCNN(lbl2name=stats.lbl2name)
 
-def run_training(img_sz=384, bs=12, acc=4, lr=0.005, workers=4, head_runs=50, full_runs=200):
-    print(f"Training with image size {img_sz}, learning rate {lr}, for {head_runs}+{full_runs} epochs.")
+def run_training(img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200):
+    print(f"Training with image size {img_sz}, auto learning rate, for {head_runs}+{full_runs} epochs.")
     chkpt_cb = ModelCheckpoint(
         filepath="models/FRCNN-"+froot+"-{epoch}-{val_acc:.2f}.ckpt",
         save_last=True,
@@ -74,14 +74,14 @@ def run_training(img_sz=384, bs=12, acc=4, lr=0.005, workers=4, head_runs=50, fu
     )
     # train head only, since using less params, double the bs and half the grad accumulation cycle to use more GPU VRAM
     if head_runs > 0:
-        head_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), lr=lr, bs=bs*2, workers=workers)
+        head_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs*2, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=head_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,int(acc//2)))
         trainer.fit(frcnn_model, head_dm)
 
     if full_runs > 0:
         frcnn_model.unfreeze() # allow finetuning of the backbone
         # finetune head and backbone
-        full_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), lr=lr, bs=bs, workers=workers)
+        full_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=full_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,acc))
         trainer.fit(frcnn_model, full_dm)
 

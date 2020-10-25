@@ -528,7 +528,7 @@ def accuracy_1img(pred, tgt, scut=0.5, ithr=0.5):
 
 # Cell
 class FRCNN(LightningModule):
-    def __init__(self, lbl2name:dict={}, lr:float=1e-2):
+    def __init__(self, lbl2name:dict={}, lr:float=1e-3):
         LightningModule.__init__(self)
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
         # lock the pretrained model body
