@@ -10,15 +10,6 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: subcoco_utils-checkpoint
-      url: subcoco_utils-checkpoint.html
-    - output: web,pdf
-      title: subcoco_ivf-checkpoint
-      url: subcoco_ivf-checkpoint.html
-    - output: web,pdf
-      title: subcoco_pl-checkpoint
-      url: subcoco_pl-checkpoint.html
-    - output: web,pdf
       title: Common Utilities to Process Subcoco Dataset for both Pytorch Lightning
         and FastAI
       url: subcoco_utils.html
