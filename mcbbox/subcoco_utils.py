@@ -376,7 +376,7 @@ class TargetResize():
 # Cell
 class SubCocoDataModule(LightningDataModule):
 
-    def __init__(self, root, stats, resize=(384,384), bs=32, workers=4, split_ratio=0.8):
+    def __init__(self, root, stats, resize=(128,128), bs=32, workers=4, split_ratio=0.8):
         super().__init__()
         self.dir = root
         self.bs = bs

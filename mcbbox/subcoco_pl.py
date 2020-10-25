@@ -72,17 +72,19 @@ def run_training(img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=20
         mode='max',
         verbose=True,
     )
+    num_gpu = 1 if torch.cuda.is_available() else 0
+
     # train head only, since using less params, double the bs and half the grad accumulation cycle to use more GPU VRAM
     if head_runs > 0:
         head_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs*2, workers=workers)
-        trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=head_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,int(acc//2)))
+        trainer = Trainer(gpus=num_gpu, auto_lr_find=True, max_epochs=head_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,int(acc//2)))
         trainer.fit(frcnn_model, head_dm)
 
     if full_runs > 0:
         frcnn_model.unfreeze() # allow finetuning of the backbone
         # finetune head and backbone
         full_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs, workers=workers)
-        trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=full_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,acc))
+        trainer = Trainer(gpus=num_gpu, auto_lr_find=True, max_epochs=full_runs, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,acc))
         trainer.fit(frcnn_model, full_dm)
 
 # Cell
