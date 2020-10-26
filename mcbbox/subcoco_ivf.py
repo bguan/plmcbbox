@@ -87,7 +87,7 @@ def gen_transforms_and_learner(stats:CocoDatasetStats,
     save_model_fname=f'{backbone_name}-{img_sz}'
     callbacks=[
         GradientAccumulation(bs*acc_cycs),
-        SaveModelCallback(fname=save_model_fname, monitor=monitor_metric),
+        SaveModelDupBestCallback(fname=save_model_fname, monitor=monitor_metric),
         EarlyStoppingCallback(monitor=monitor_metric, min_delta=0.001, patience=10)
     ]
 
