@@ -1,9 +1,16 @@
 #!/usr/bin/python
+from mcbbox.subcoco_utils import *
 from mcbbox.subcoco_ivf import *
 
-img_sz, bs, acc, head_runs, full_runs, lr = 512, 2, 16, 20, 100, 0.01
-tfms, learn, backbone_name = gen_transforms_and_learner(img_size=img_sz, bs=bs, acc_cycs=acc)
-run_training(learn, min_lr=lr, head_runs=head_runs, full_runs=full_runs)
+datadir, url, img_subdir = 'workspace', 'https://s3.amazonaws.com/fast-ai-coco/coco_sample.tgz', 'train_sample'
+train_json = fetch_subcoco(datadir=datadir, url=url, img_subdir=img_subdir)
+stats = load_stats(train_json, img_dir=f'{datadir}/coco_sample/{img_subdir}', force_reload=False)
+train_records, valid_records = parse_subcoco(stats)
+
+img_sz=128
+tfms, learn, backbone_name = gen_transforms_and_learner(stats, train_records, valid_records, img_size=img_sz, bs=2, acc_cycs=16)
+run_training(learn, min_lr=0.01, head_runs=1, full_runs=1)
+
 save_model_fpath = f'models/{backbone_name}-subcoco-{img_sz}-final.pth'
 save_final(learn, save_model_fpath)
 

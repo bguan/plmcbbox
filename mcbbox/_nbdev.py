@@ -3,6 +3,7 @@
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
 index = {"fetch_data": "10_subcoco_utils.ipynb",
+         "fetch_subcoco": "10_subcoco_utils.ipynb",
          "CocoDatasetStats": "10_subcoco_utils.ipynb",
          "empty_list": "10_subcoco_utils.ipynb",
          "load_stats": "10_subcoco_utils.ipynb",
@@ -17,21 +18,14 @@ index = {"fetch_data": "10_subcoco_utils.ipynb",
          "SubCocoDataModule": "10_subcoco_utils.ipynb",
          "SubCocoWrapper": "10_subcoco_utils.ipynb",
          "iou_calc": "10_subcoco_utils.ipynb",
-         "accuracy_1img": "10_subcoco_utils.ipynb",
+         "match_true_false_neg": "10_subcoco_utils.ipynb",
+         "calc_wavg_F1": "10_subcoco_utils.ipynb",
          "FRCNN": "10_subcoco_utils.ipynb",
          "digest_pred": "10_subcoco_utils.ipynb",
-         "datadir": "30_subcoco_pl.ipynb",
-         "froot": "30_subcoco_pl.ipynb",
-         "fname": "30_subcoco_pl.ipynb",
-         "url": "30_subcoco_pl.ipynb",
-         "json_fname": "30_subcoco_pl.ipynb",
-         "img_dir": "30_subcoco_pl.ipynb",
-         "stats": "30_subcoco_pl.ipynb",
-         "parser": "20_subcoco_ivf.ipynb",
+         "parse_subcoco": "20_subcoco_ivf.ipynb",
          "gen_transforms_and_learner": "20_subcoco_ivf.ipynb",
          "run_training": "30_subcoco_pl.ipynb",
-         "save_final": "30_subcoco_pl.ipynb",
-         "frcnn_model": "30_subcoco_pl.ipynb"}
+         "save_final": "30_subcoco_pl.ipynb"}
 
 modules = ["subcoco_utils.py",
            "subcoco_ivf.py",
