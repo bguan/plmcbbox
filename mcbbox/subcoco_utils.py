@@ -77,9 +77,9 @@ def fetch_subcoco(
 ):
     fname = url.split('/')[-1]
     froot = (fname.split('.'))[0]
-    json_fname = glob.glob(f"{datadir}/**/{img_subdir}.json", recursive=True)[0]
     if not os.path.isdir(Path(datadir)/froot):
         fetch_data(url, Path(datadir), fname, chunk_size=1024*1024)
+    json_fname = glob.glob(f"{datadir}/**/{img_subdir}.json", recursive=True)[0]
     with open(json_fname, 'r') as json_f:
         train_json = json.load(json_f)
 

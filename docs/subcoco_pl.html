@@ -82,7 +82,7 @@ nb_path: "30_subcoco_pl.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_json</span> <span class="o">=</span> <span class="n">fetch_subcoco</span><span class="p">(</span><span class="n">datadir</span><span class="o">=</span><span class="s1">&#39;workspace&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s1">&#39;http://files.fast.ai/data/examples/coco_tiny.tgz&#39;</span><span class="p">,</span> <span class="n">img_subdir</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_json</span> <span class="o">=</span> <span class="n">fetch_subcoco</span><span class="p">(</span><span class="n">datadir</span><span class="o">=</span><span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s1">&#39;http://files.fast.ai/data/examples/coco_tiny.tgz&#39;</span><span class="p">,</span> <span class="n">img_subdir</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -176,7 +176,7 @@ nb_path: "30_subcoco_pl.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">img_dir</span><span class="o">=</span><span class="s1">&#39;workspace/coco_tiny/train&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">img_dir</span><span class="o">=</span><span class="s1">&#39;/tmp/coco_tiny/train&#39;</span>
 <span class="n">stats</span> <span class="o">=</span> <span class="n">load_stats</span><span class="p">(</span><span class="n">train_json</span><span class="p">,</span> <span class="n">img_dir</span><span class="o">=</span><span class="n">img_dir</span><span class="p">,</span> <span class="n">force_reload</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
     <span class="sa">f</span><span class="s2">&quot;Categories </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_cats</span><span class="si">}</span><span class="s2">, Images </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_imgs</span><span class="si">}</span><span class="s2">, Boxes </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">num_bboxs</span><span class="si">}</span><span class="s2">, avg (w,h) </span><span class="si">{</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">avg_width</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">avg_height</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -594,20 +594,19 @@ Saving latest checkpoint...
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">pimg</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">tgt_l2bs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">empty_list</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]),</span> <span class="n">y</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">]):</span>
-        <span class="n">tgt_l2bs</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="p">)</span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">pimg</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">tgt_l2bs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">empty_list</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]),</span> <span class="n">y</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">]):</span>
+    <span class="n">tgt_l2bs</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="p">)</span> 
 
-    <span class="n">overlay_img_bbox</span><span class="p">(</span><span class="n">pimg</span><span class="p">,</span> <span class="n">tgt_l2bs</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">)</span>
+<span class="n">overlay_img_bbox</span><span class="p">(</span><span class="n">pimg</span><span class="p">,</span> <span class="n">tgt_l2bs</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">)</span>
 
-    <span class="n">frcnn_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-    <span class="n">pred</span> <span class="o">=</span> <span class="n">frcnn_model</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
-    <span class="n">pred_l2bs</span> <span class="o">=</span> <span class="n">digest_pred</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">,</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">overlay_img_bbox</span><span class="p">(</span><span class="n">pimg</span><span class="p">,</span> <span class="n">pred_l2bs</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">)</span>
+<span class="n">frcnn_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">frcnn_model</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+<span class="n">pred_l2bs</span> <span class="o">=</span> <span class="n">digest_pred</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">,</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">overlay_img_bbox</span><span class="p">(</span><span class="n">pimg</span><span class="p">,</span> <span class="n">pred_l2bs</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -784,13 +783,12 @@ ValueError: prepare_data() requires a code object with 1 free vars, not 0
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">pred</span> <span class="o">=</span> <span class="n">pretrained_model</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
-    <span class="n">pred_l2bs</span> <span class="o">=</span> <span class="n">digest_pred</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">,</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">pimg</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">pretrained_model</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+<span class="n">pred_l2bs</span> <span class="o">=</span> <span class="n">digest_pred</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">,</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">pimg</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="n">overlay_img_bbox</span><span class="p">(</span><span class="n">pimg</span><span class="p">,</span> <span class="n">pred_l2bs</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">)</span>
+<span class="n">overlay_img_bbox</span><span class="p">(</span><span class="n">pimg</span><span class="p">,</span> <span class="n">pred_l2bs</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">lbl2name</span><span class="p">)</span>
 </pre></div>
 
     </div>
