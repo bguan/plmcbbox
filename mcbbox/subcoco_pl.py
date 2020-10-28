@@ -62,7 +62,14 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
     def __init__(self, root, stats, transform=None, target_transform=None, transforms=None):
         super(SubCocoDataset, self).__init__(root, transforms, transform, target_transform)
         self.stats = stats
-        self.img_ids = list(stats.img2fname.keys())
+        self.img_ids = []
+        n_missing = 0
+        for img_id, img_fname in stats.img2fname.items():
+            if not os.path.isfile(stats.img_dir/img_fname):
+                n_missing += 1
+            else:
+                self.img_ids.append(img_id)
+        if n_missing > 0 : print(f'Warning: {n_missing} image files are missing!!!')
 
     def __getitem__(self, index):
         """
@@ -101,7 +108,7 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
         return img, target
 
     def __len__(self):
-        return self.stats.num_imgs
+        return len(self.img_ids)
 
 # Cell
 class TargetResize():

@@ -489,7 +489,7 @@ Args:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TargetResize" class="doc_header"><code>class</code> <code>TargetResize</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L107" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TargetResize</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>to_size</code></strong>:<code>Tuple</code>[<code>int</code>, <code>int</code>])</p>
+<h2 id="TargetResize" class="doc_header"><code>class</code> <code>TargetResize</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L114" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TargetResize</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>to_size</code></strong>:<code>Tuple</code>[<code>int</code>, <code>int</code>])</p>
 </blockquote>
 
 </div>
@@ -526,7 +526,7 @@ Args:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubCocoDataModule" class="doc_header"><code>class</code> <code>SubCocoDataModule</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L130" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataModule</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>LightningDataModule</code></p>
+<h2 id="SubCocoDataModule" class="doc_header"><code>class</code> <code>SubCocoDataModule</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L137" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataModule</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>LightningDataModule</code></p>
 </blockquote>
 <p>A DataModule standardizes the training, val, test splits, data preparation and transforms.
 The main advantage is consistent data splits, data preparation and transforms across models.</p>
@@ -597,7 +597,7 @@ split transform and process the data</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FRCNN" class="doc_header"><code>class</code> <code>FRCNN</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L167" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FRCNN</code>(<strong><code>lbl2name</code></strong>:<code>dict</code>=<em><code>{}</code></em>, <strong><code>lr</code></strong>:<code>float</code>=<em><code>0.001</code></em>) :: <code>LightningModule</code></p>
+<h2 id="FRCNN" class="doc_header"><code>class</code> <code>FRCNN</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L174" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FRCNN</code>(<strong><code>lbl2name</code></strong>:<code>dict</code>=<em><code>{}</code></em>, <strong><code>lr</code></strong>:<code>float</code>=<em><code>0.001</code></em>) :: <code>LightningModule</code></p>
 </blockquote>
 <p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
@@ -644,7 +644,7 @@ inheritance.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_training" class="doc_header"><code>run_training</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L228" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_training</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>modeldir</code></strong>:<code>str</code>, <strong><code>img_dir</code></strong>:<code>str</code>, <strong><code>resume_saved_model_file</code></strong>:<code>str</code>=<em><code>'last.ckpt'</code></em>, <strong><code>img_sz</code></strong>=<em><code>384</code></em>, <strong><code>bs</code></strong>=<em><code>12</code></em>, <strong><code>acc</code></strong>=<em><code>4</code></em>, <strong><code>workers</code></strong>=<em><code>4</code></em>, <strong><code>head_runs</code></strong>=<em><code>50</code></em>, <strong><code>full_runs</code></strong>=<em><code>200</code></em>)</p>
+<h4 id="run_training" class="doc_header"><code>run_training</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L235" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_training</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>modeldir</code></strong>:<code>str</code>, <strong><code>img_dir</code></strong>:<code>str</code>, <strong><code>resume_saved_model_file</code></strong>:<code>str</code>=<em><code>'last.ckpt'</code></em>, <strong><code>img_sz</code></strong>=<em><code>384</code></em>, <strong><code>bs</code></strong>=<em><code>12</code></em>, <strong><code>acc</code></strong>=<em><code>4</code></em>, <strong><code>workers</code></strong>=<em><code>4</code></em>, <strong><code>head_runs</code></strong>=<em><code>50</code></em>, <strong><code>full_runs</code></strong>=<em><code>200</code></em>)</p>
 </blockquote>
 
 </div>
@@ -934,7 +934,7 @@ last_model_path saved = /home/brian/Projects/mcbbox/models/last.ckpt
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="save_final" class="doc_header"><code>save_final</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L268" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_final</code>(<strong><code>frcnn_model</code></strong>, <strong><code>model_save_path</code></strong>)</p>
+<h4 id="save_final" class="doc_header"><code>save_final</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_pl.py#L275" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_final</code>(<strong><code>frcnn_model</code></strong>, <strong><code>model_save_path</code></strong>)</p>
 </blockquote>
 
 </div>
