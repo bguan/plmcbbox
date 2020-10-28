@@ -16,7 +16,7 @@ docs: $(SRC)
 	touch docs
 
 test:
-	nbdev_test_nbs
+	nbdev_test_nbs --n_workers=1
 
 dist: clean
 	python setup.py sdist bdist_wheel
