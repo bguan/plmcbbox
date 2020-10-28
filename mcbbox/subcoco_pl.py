@@ -38,7 +38,7 @@ torch.multiprocessing.set_sharing_strategy('file_system')
 # Cell
 import pytorch_lightning as pl
 from gpumonitor.callbacks.lightning import PyTorchGpuMonitorCallback
-from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from pytorch_lightning import LightningDataModule, LightningModule, Trainer
 from pytorch_lightning.core.step_result import TrainResult
 from .subcoco_utils import *
@@ -233,14 +233,14 @@ class FRCNN(LightningModule):
         return pred
 
 # Cell
-def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved_model_file:str='last.ckpt',
+def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved_model_file:str=None,
                  img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200):
 
     frcnn_model = FRCNN(lbl2name=stats.lbl2name)
 
     print(f"Training with image size {img_sz}, auto learning rate, for {head_runs}+{full_runs} epochs.")
     chkpt_cb = ModelCheckpoint(
-        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{val_loss:.2f}-{val_acc:.2f}.ckpt',
+        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{val_acc:.2f}.ckpt',
         dirpath=modeldir,
         save_last=True,
         monitor='val_acc',
@@ -248,6 +248,15 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved
         save_top_k=-1,
         verbose=True,
     )
+    early_stop_cb = EarlyStopping(
+       monitor='val_acc',
+       min_delta=0.001,
+       patience=5,
+       verbose=True,
+       mode='max'
+    )
+    gpumon_cb = PyTorchGpuMonitorCallback(delay=1)
+    callbacks = [early_stop_cb, gpumon_cb]
 
     if resume_saved_model_file and os.path.isfile(f'{modeldir}/{resume_saved_model_file}'):
         try:
@@ -259,8 +268,7 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved
     if head_runs > 0:
         head_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs*2, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=head_runs, default_root_dir = 'models',
-                          callbacks=[PyTorchGpuMonitorCallback(delay=1)],
-                          checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,int(acc//2)))
+                          callbacks=callbacks, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,int(acc//2)))
         trainer.fit(frcnn_model, head_dm)
 
     if full_runs > 0:
@@ -268,8 +276,7 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved
         # finetune head and backbone
         full_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=full_runs, default_root_dir = 'models',
-                          callbacks=[PyTorchGpuMonitorCallback(delay=1)],
-                          checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,acc))
+                          callbacks=callbacks, checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,acc))
         trainer.fit(frcnn_model, full_dm)
 
     return frcnn_model, chkpt_cb.last_model_path
