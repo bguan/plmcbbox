@@ -37,6 +37,7 @@ torch.multiprocessing.set_sharing_strategy('file_system')
 
 # Cell
 import pytorch_lightning as pl
+from gpumonitor.callbacks.lightning import PyTorchGpuMonitorCallback
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning import LightningDataModule, LightningModule, Trainer
 from pytorch_lightning.core.step_result import TrainResult
@@ -258,6 +259,7 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved
     if head_runs > 0:
         head_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs*2, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=head_runs, default_root_dir = 'models',
+                          callbacks=[PyTorchGpuMonitorCallback(delay=1)],
                           checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,int(acc//2)))
         trainer.fit(frcnn_model, head_dm)
 
@@ -266,6 +268,7 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved
         # finetune head and backbone
         full_dm = SubCocoDataModule(img_dir, stats, resize=(img_sz,img_sz), bs=bs, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=full_runs, default_root_dir = 'models',
+                          callbacks=[PyTorchGpuMonitorCallback(delay=1)],
                           checkpoint_callback=chkpt_cb, accumulate_grad_batches=max(1,acc))
         trainer.fit(frcnn_model, full_dm)
 

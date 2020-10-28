@@ -76,6 +76,9 @@ class SubCocoParser(Parser, LabelsMixin, BBoxesMixin, FilepathMixin, SizeMixin):
         skipped = 0
         for img_id, imgfname in stats.img2fname.items():
             imgf = stats.img_dir/imgfname
+            if not os.path.isfile(imgf):
+                skipped += 1
+                continue
             width, height = stats.img2sz[img_id]
             bboxs = []
             lids = []
