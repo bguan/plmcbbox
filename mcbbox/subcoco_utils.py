@@ -133,6 +133,7 @@ class CocoDatasetStats():
         for img in tqdm(self.imgs):
             img_id = img['id']
             fname = self.img_dir/img['file_name']
+            if not os.isfile(fname): continue
             n = n + 1
             img = Image.open(fname)
             istat = ImageStat.Stat(img)
