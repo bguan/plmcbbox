@@ -41,7 +41,6 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning import LightningDataModule, LightningModule, Trainer
 from pytorch_lightning.core.step_result import TrainResult
 from .subcoco_utils import *
-from nbdev.showdoc import *
 
 print(f"Python ver {sys.version}, torch {torch.__version__}, torchvision {torchvision.__version__}, pytorch_lightning {pl.__version__}")
 
@@ -162,7 +161,7 @@ class SubCocoDataModule(LightningDataModule):
         return DataLoader(self.train, batch_size=self.bs, num_workers=self.workers, collate_fn=self.collate_fn, shuffle=self.shuffle)
 
     def val_dataloader(self):
-        return DataLoader(self.val, batch_size=self.bs, num_workers=self.workers, collate_fn=self.collate_fn, shuffle=self.shuffle)
+        return DataLoader(self.val, batch_size=self.bs, num_workers=self.workers, collate_fn=self.collate_fn, shuffle=False)
 
 # Cell
 class FRCNN(LightningModule):
@@ -226,13 +225,14 @@ class FRCNN(LightningModule):
         return pred
 
 # Cell
-def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200):
+def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved_model_file:str='last.ckpt',
+                 img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200):
 
     frcnn_model = FRCNN(lbl2name=stats.lbl2name)
 
     print(f"Training with image size {img_sz}, auto learning rate, for {head_runs}+{full_runs} epochs.")
     chkpt_cb = ModelCheckpoint(
-        filename="FRCNN-subcoco-{epoch}-{int(val_acc*100):d}-pcnt.ckpt",
+        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{val_loss:.2f}-{val_acc:.2f}.ckpt',
         dirpath=modeldir,
         save_last=True,
         monitor='val_acc',
@@ -240,6 +240,12 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, img_sz=384, 
         save_top_k=-1,
         verbose=True,
     )
+
+    if resume_saved_model_file and os.path.isfile(f'{modeldir}/{resume_saved_model_file}'):
+        try:
+            frcnn_model.model.load_state_dict(torch.load(resume_saved_model_file))
+        except Exception as e:
+            print(f'Unexpected error loading previously saved model: {e}')
 
     # train head only, since using less params, double the bs and half the grad accumulation cycle to use more GPU VRAM
     if head_runs > 0:

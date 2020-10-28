@@ -156,6 +156,7 @@ class CocoDatasetStats():
         anno_id = 0
         for a in ann['annotations']:
             img_id = a['image_id']
+            if self.img2sz.get(img_id, None) == None: continue
             cat_id = a['category_id']
             lbl_id = self.cat2lbl[cat_id]
             l2bs_for_img = self.img2l2bs.get(img_id, { l:[] for l in range(1+len(self.cat2name))})
