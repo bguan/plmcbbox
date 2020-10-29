@@ -12,6 +12,7 @@ import torch.nn.functional as F
 import torch.multiprocessing
 
 from collections import defaultdict
+from functools import reduce
 from IPython.utils import io
 from pathlib import Path
 from PIL import Image
@@ -237,7 +238,7 @@ class FRCNN(LightningModule):
         return pred
 
 # Cell
-def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved_model_file:str=None,
+def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_ckpt_fname:str=None,
                  img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200):
 
     frcnn_model = FRCNN(lbl2name=stats.lbl2name)
@@ -261,12 +262,15 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved
     )
     gpumon_cb = PyTorchGpuMonitorCallback(delay=1)
     callbacks = [early_stop_cb, gpumon_cb]
-
-    if resume_saved_model_file and os.path.isfile(f'{modeldir}/{resume_saved_model_file}'):
+    resume_ckpt = f'{modeldir}/{resume_ckpt_fname}' if resume_ckpt_fname != None else None
+    if resume_ckpt and os.path.isfile(resume_ckpt):
         try:
-            frcnn_model.model.load_state_dict(torch.load(resume_saved_model_file))
+            print(f'Loading previously saved model: {resume_ckpt}...')
+            frcnn_model = FRCNN.load_from_checkpoint(resume_ckpt, lbl2name=stats.lbl2name)
         except Exception as e:
-            print(f'Unexpected error loading previously saved model: {e}')
+            print(f'Unexpected error loading previously saved model {resume_ckpt}: {e}')
+    elif resume_ckpt:
+        print(f'Failed to find {resume_ckpt}')
 
     # train head only, since using less params, double the bs and half the grad accumulation cycle to use more GPU VRAM
     if head_runs > 0:

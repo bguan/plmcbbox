@@ -379,7 +379,6 @@ def calc_wavg_F1(pred, tgt, scut=0.5, ithr=0.5):
 
 # Cell
 def digest_pred(l2name, pred, cutoff=0.5):
-    print(f"pred = {pred}")
     scores = pred['scores']
     pass_idxs = (scores > cutoff).nonzero(as_tuple=False)
     lbls = pred['labels'][pass_idxs]
