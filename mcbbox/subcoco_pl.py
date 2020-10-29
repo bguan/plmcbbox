@@ -68,6 +68,8 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
         for img_id, img_fname in stats.img2fname.items():
             if not os.path.isfile(stats.img_dir/img_fname):
                 n_missing += 1
+            elif stats.img2sz.get(img_id, None) == None:
+                n_missing += 1
             else:
                 self.img_ids.append(img_id)
         if n_missing > 0 : print(f'Warning: {n_missing} image files are missing!!!')
@@ -85,14 +87,13 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
             return (None, None)
 
         img = Image.open(os.path.join(self.root, img_fname)).convert('RGB')
-        target = { "boxes": [], "labels": [], "image_id": None, "area": [], "iscrowd": 0, "ids": [] }
+        target = { "boxes": [], "labels": [], "image_id": img_id, "area": [], "iscrowd": 0, "ids": [] }
         count = 0
         lbs = self.stats.img2lbs.get(img_id,[])
         for l, x, y, w, h in lbs:
             count += 1
             target["boxes"].append([x, y, x+w, y+h]) # FRCNN wants x1,y1,x2,y2 format!
             target["labels"].append(l)
-            target["image_id"] = img_id
             target["area"].append(w*h)
             anno_id = img_id*1000 + count
             target["ids"].append(anno_id)
@@ -240,7 +241,7 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_saved
 
     print(f"Training with image size {img_sz}, auto learning rate, for {head_runs}+{full_runs} epochs.")
     chkpt_cb = ModelCheckpoint(
-        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{val_acc:.2f}.ckpt',
+        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{val_acc:.2f}',
         dirpath=modeldir,
         save_last=True,
         monitor='val_acc',
