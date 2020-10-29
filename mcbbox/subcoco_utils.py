@@ -7,7 +7,6 @@ __all__ = ['fetch_data', 'fetch_subcoco', 'CocoDatasetStats', 'empty_list', 'loa
 # Cell
 import albumentations as A
 import glob
-import icevision
 import json
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors

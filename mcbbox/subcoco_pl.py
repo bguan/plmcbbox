@@ -37,6 +37,7 @@ torch.multiprocessing.set_sharing_strategy('file_system')
 
 # Cell
 import pytorch_lightning as pl
+from gpumonitor.monitor import GPUStatMonitor
 from gpumonitor.callbacks.lightning import PyTorchGpuMonitorCallback
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from pytorch_lightning import LightningDataModule, LightningModule, Trainer
@@ -44,6 +45,8 @@ from pytorch_lightning.core.step_result import TrainResult
 from .subcoco_utils import *
 
 print(f"Python ver {sys.version}, torch {torch.__version__}, torchvision {torchvision.__version__}, pytorch_lightning {pl.__version__}")
+if torch.cuda.is_available(): monitor = GPUStatMonitor(delay=1)
+
 
 # Cell
 class SubCocoDataset(torchvision.datasets.VisionDataset):
