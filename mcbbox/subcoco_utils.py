@@ -187,7 +187,7 @@ def empty_list()->list: return [] # cannot use lambda as pickling will fail when
 
 # Cell
 def load_stats(ann:dict, img_dir:str, force_reload:bool=False)->CocoDatasetStats:
-    stats_fpath = Path(img_dir)/'stats.pkl'
+    stats_fpath = Path(img_dir).parent/'stats.pkl'
     stats = None
     if os.path.isfile(stats_fpath) and not force_reload:
         try:
