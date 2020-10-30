@@ -155,7 +155,7 @@ class SubCocoDataModule(LightningDataModule):
         transform=transforms.Compose([
             transforms.Resize(resize),
             transforms.ToTensor(),
-            # transforms.Normalize(stats.chn_means/255, stats.chn_stds/255) # need to divide by 255
+            transforms.Normalize(stats.chn_means/255, stats.chn_stds/255) # need to divide by 255
         ])
 
         tgt_tfm = transforms.Compose([ TargetResize(stats, resize) ])
@@ -178,7 +178,7 @@ class SubCocoDataModule(LightningDataModule):
 
 # Cell
 class FRCNN(LightningModule):
-    def __init__(self, lbl2name:dict={}, lr:float=1e-3):
+    def __init__(self, lbl2name:dict={}, img_sz=128, lr:float=1e-3):
         LightningModule.__init__(self)
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
         # lock the pretrained model body
@@ -193,7 +193,7 @@ class FRCNN(LightningModule):
         self.num_classes = len(self.categories)
         # replace the pre-trained head with a new one, which is trainable
         self.model.roi_heads.box_predictor = FastRCNNPredictor(self.in_features, self.num_classes+1)
-
+        self.img_sz = img_sz
         self.lr = lr
 
     def unfreeze(self):
@@ -201,64 +201,82 @@ class FRCNN(LightningModule):
             param.requires_grad = True
         self.lr = self.lr / 10
 
+    # FRCNN is tricky, in training model the model takes X & Y to produce loss
     def training_step(self, train_batch, batch_idx):
-        x, y = train_batch
-        losses = self.model(x, y)
-        loss = sum(losses.values())
-        result = {'loss':loss, 'train_loss':loss}
-        return result
+        xs, ys = train_batch
+        self.model.train()
+        losses = self.model(xs, ys) # has 4 types of losses: loss_classifier loss_box_reg loss_objectness loss_rpn_box_reg
+        return {'loss': sum(losses.values())}
 
     def metrics(self, preds, targets):
-        accu = torch.zeros((len(preds), 1))
+        metrics = torch.zeros((min(len(preds), len(targets)), 2))
         for i, (p,t) in enumerate(zip(preds, targets)):
-            accu[i] = calc_wavg_F1(p, t, .3, .3)
-        return accu
+            # print(f'Prediction = {p}, Target = {t}')
+            metrics[i,0] = calc_wavg_F1(p, t, .5, .5)
+            metrics[i,1] = SubCocoWrapper(p, t, self.img_sz, self.img_sz).metrics()[0]
+        return metrics
 
     def validation_step(self, val_batch, batch_idx):
         # validation runs the model in eval mode, so Y is prediction, not losses
         xs, ys = val_batch
-        preds = self.model(xs, ys)
-        accu = self.metrics(preds, ys)
-        return {'val_acc': accu} # should add 'val_acc' accuracy e.g. MAP, MAR etc
+        preds = self(xs) # calls forward() which is eval mode
+        metrics = self.metrics(preds, ys)
+
+        self.model.train()
+        losses = self.model(xs, ys)
+        #print(f"val step losses = {losses}, sum(losses.values()) = {sum(losses.values())}")
+        return {'val_acc': metrics[:,0], 'val_coco': metrics[:,1], 'val_loss': sum(losses.values())}
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
         return optimizer
 
     def validation_epoch_end(self, outputs):
+        tensorboard_logs ={}
         # called at the end of the validation epoch, but gradient accumulation may result in last row being different size
         val_accs = np.concatenate([ (o['val_acc']).numpy() for o in outputs ])
         avg_acc = val_accs.mean()
-        tensorboard_logs = {'val_acc': avg_acc}
-        self.log_dict({'val_acc': avg_acc, 'logs': tensorboard_logs})
+        tensorboard_logs['val_acc'] = avg_acc
 
-    def forward(self, x):
+        val_cocos = np.concatenate([ (o['val_coco']).numpy() for o in outputs ])
+        avg_coco = val_cocos.mean()
+        tensorboard_logs['val_coco'] = avg_coco
+
+        val_losses = np.array([ float(o['val_loss']) for o in outputs ])
+        avg_loss = val_losses.mean()
+        tensorboard_logs['val_loss'] = avg_loss
+        print(f"Epoch end avg val_acc = {avg_acc} (F1 @ IoU>.5, Score>.5), avg val_coco = {avg_coco}, avg val_loss = {avg_loss}")
+        self.log_dict({'val_acc': avg_acc, 'val_coco': avg_coco, 'val_loss': avg_loss, 'logs': tensorboard_logs})
+
+    # forward takes only X, so need to put FRCNN in eval mode
+    def forward(self, xs):
         self.model.eval()
-        pred = self.model(x)
-        return pred
+        return self.model(xs)
 
 # Cell
 def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_ckpt_fname:str=None,
-                 img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200):
+                 img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200,
+                 monitor='val_acc', mode='max', save_top=-1,
+                ):
 
-    frcnn_model = FRCNN(lbl2name=stats.lbl2name)
+    frcnn_model = FRCNN(lbl2name=stats.lbl2name, img_sz=img_sz)
 
     print(f"Training with image size {img_sz}, auto learning rate, for {head_runs}+{full_runs} epochs.")
     chkpt_cb = ModelCheckpoint(
-        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{val_acc:.2f}',
+        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{'+monitor+':.3f}',
         dirpath=modeldir,
         save_last=True,
-        monitor='val_acc',
-        mode='max',
-        save_top_k=-1,
+        monitor=monitor,
+        mode=mode,
+        save_top_k=save_top,
         verbose=True,
     )
     early_stop_cb = EarlyStopping(
-       monitor='val_acc',
+       monitor=monitor,
        min_delta=0.001,
        patience=5,
        verbose=True,
-       mode='max'
+       mode=mode
     )
     gpumon_cb = PyTorchGpuMonitorCallback(delay=1)
     callbacks = [early_stop_cb, gpumon_cb]

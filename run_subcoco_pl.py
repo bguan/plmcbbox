@@ -9,6 +9,9 @@ img_dir = f'{datadir}/{froot}/{img_subdir}'
 stats = load_stats(train_json, img_dir=img_dir, force_reload=False)
 
 img_sz=128 #512
-frcnn_model, last_save_fname = run_training(stats, 'models', img_dir, img_sz=img_sz, bs=2, acc=16, workers=2, head_runs=1, full_runs=0)
+frcnn_model, last_save_fname = run_training(
+        stats, 'models', img_dir, resume_ckpt_fname='last.ckpt', img_sz=img_sz, 
+        bs=2, acc=16, workers=2, head_runs=1, full_runs=1,
+        monitor='val_loss', mode='min', save_top=-1)
 model_save_path = f"models/FRCNN-{froot}-{img_sz}-final.saved"
 save_final(frcnn_model, model_save_path)

@@ -384,7 +384,55 @@ nb_path: "10_subcoco_utils.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubCocoWrapper" class="doc_header"><code>class</code> <code>SubCocoWrapper</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L236" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoWrapper</code>(<strong><code>categories</code></strong>, <strong><code>p</code></strong>, <strong><code>t</code></strong>)</p>
+<h4 id="listify" class="doc_header"><code>listify</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L236" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>listify</code>(<strong><code>tensorOrIterable</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tensorify" class="doc_header"><code>tensorify</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L239" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tensorify</code>(<strong><code>tensorOrIterable</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="SubCocoWrapper" class="doc_header"><code>class</code> <code>SubCocoWrapper</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L242" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoWrapper</code>(<strong><code>prediction</code></strong>, <strong><code>target</code></strong>, <strong><code>width</code></strong>, <strong><code>height</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -406,24 +454,7 @@ nb_path: "10_subcoco_utils.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Using the above wrapper, I can then compute the metric for the 1 sample epoch to get the metrics I want for the image</p>
-<ul>
-<li>Mean Average Precision (MAP)</li>
-<li>Mean Average Recall (MAR) </li>
-<li>over a range of Intersection over Union (IOU) values from 50% to 95%</li>
-<li>then combined it using <a href="https://en.wikipedia.org/wiki/F1_score">F1</a></li>
-</ul>
-<p>I should be able to use the above to do something like this:</p>
-
-<pre><code>    subcoco = SubCocoWrapper(categories, predictions, targets)
-    cocoeval = COCOeval(subcoco.targetCoco(), subcoco.predictionCoco(), "bbox")
-    cocoeval.evaluate()
-    cocoeval.accumulate()
-    cocoeval.summarize()
-    precision = cocoeval.stats[0] # Average Precision (AP) @[ IoU=0.50:0.95 | area=all | maxDets=100 ]
-    recall = cocoeval.stats[8] # Average Recall (AR) @[ IoU=0.50:0.95 | area=all | maxDets=100 ]
-    f1 = 2/(1/precision + 1/recall) # see https://en.wikipedia.org/wiki/F1_score</code></pre>
-<p>But after messing with this for a few days, it doesn't seem to be working. My precision and recall is always coming back -1, so my f1 is also always -1. I suspect my understanding or usage of CocoEval is wrong...</p>
+<p>Using the above wrapper, I can then compute the metric for the 1 sample epoch to get the various coco metrics</p>
 
 </div>
 </div>
@@ -458,7 +489,7 @@ nb_path: "10_subcoco_utils.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="iou_calc" class="doc_header"><code>iou_calc</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L277" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iou_calc</code>(<strong><code>x1</code></strong>, <strong><code>y1</code></strong>, <strong><code>w1</code></strong>, <strong><code>h1</code></strong>, <strong><code>x2</code></strong>, <strong><code>y2</code></strong>, <strong><code>w2</code></strong>, <strong><code>h2</code></strong>)</p>
+<h4 id="iou_calc" class="doc_header"><code>iou_calc</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L282" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iou_calc</code>(<strong><code>x1</code></strong>, <strong><code>y1</code></strong>, <strong><code>w1</code></strong>, <strong><code>h1</code></strong>, <strong><code>x2</code></strong>, <strong><code>y2</code></strong>, <strong><code>w2</code></strong>, <strong><code>h2</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -520,7 +551,7 @@ nb_path: "10_subcoco_utils.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="match_true_false_neg" class="doc_header"><code>match_true_false_neg</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L298" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>match_true_false_neg</code>(<strong><code>pred</code></strong>, <strong><code>tgt</code></strong>, <strong><code>scut</code></strong>=<em><code>0.5</code></em>, <strong><code>ithr</code></strong>=<em><code>0.5</code></em>)</p>
+<h4 id="match_true_false_neg" class="doc_header"><code>match_true_false_neg</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L303" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>match_true_false_neg</code>(<strong><code>pred</code></strong>, <strong><code>tgt</code></strong>, <strong><code>scut</code></strong>=<em><code>0.5</code></em>, <strong><code>ithr</code></strong>=<em><code>0.5</code></em>)</p>
 </blockquote>
 
 </div>
@@ -565,7 +596,7 @@ nb_path: "10_subcoco_utils.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="calc_wavg_F1" class="doc_header"><code>calc_wavg_F1</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L353" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>calc_wavg_F1</code>(<strong><code>pred</code></strong>, <strong><code>tgt</code></strong>, <strong><code>scut</code></strong>=<em><code>0.5</code></em>, <strong><code>ithr</code></strong>=<em><code>0.5</code></em>)</p>
+<h4 id="calc_wavg_F1" class="doc_header"><code>calc_wavg_F1</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L361" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>calc_wavg_F1</code>(<strong><code>pred</code></strong>, <strong><code>tgt</code></strong>, <strong><code>scut</code></strong>=<em><code>0.5</code></em>, <strong><code>ithr</code></strong>=<em><code>0.5</code></em>)</p>
 </blockquote>
 
 </div>
@@ -627,7 +658,7 @@ nb_path: "10_subcoco_utils.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="digest_pred" class="doc_header"><code>digest_pred</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L381" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>digest_pred</code>(<strong><code>l2name</code></strong>, <strong><code>pred</code></strong>, <strong><code>cutoff</code></strong>=<em><code>0.5</code></em>)</p>
+<h4 id="digest_pred" class="doc_header"><code>digest_pred</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_utils.py#L389" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>digest_pred</code>(<strong><code>l2name</code></strong>, <strong><code>pred</code></strong>, <strong><code>cutoff</code></strong>=<em><code>0.5</code></em>)</p>
 </blockquote>
 
 </div>
