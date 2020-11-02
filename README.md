@@ -17,4 +17,4 @@ Launch Jupter lab, open the Pytorch Lightning or FastAI based notebook and run!
 * On command line, run ```nbdev_build_libs```
 
 ### Run e.g. FastAI version of Subcoco script
-* On command line, run ```python run_subcoco_ivf.py``` or ```python run_subcoco_pl.py```
+* On command line, run ```python run_subcoco_effdet_icevision_fastai.py``` or ```python run_subcoco_frcnn_lightning.py```

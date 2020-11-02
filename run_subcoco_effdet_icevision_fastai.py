@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from mcbbox.subcoco_utils import *
-from mcbbox.subcoco_ivf import *
+from mcbbox.subcoco_effdet_icevision_fastai import *
 
 datadir, url, froot, img_subdir = 'workspace', 'http://files.fast.ai/data/examples/coco_tiny.tgz', 'coco_tiny', 'train'
 

@@ -2,7 +2,8 @@
   "mcbbox": {
     "Overview": "/",
     "Common Utilities to Process Subcoco Dataset for both Pytorch Lightning and FastAI": "subcoco_utils.html",
-    "Exploring Object Detection using Icevision w/ FastAI": "subcoco_ivf.html",
-    "Exploring Object Detection using Pytorch Lightning Only": "subcoco_pl.html"
+    "Pytorch Lightning Specific Utilities": "subcoco_lightning_utils.html",
+    "Exploring Object Detection using Pytorch Lightning Only": "subcoco_retinanet_lightning.html",
+    "subcoco_effdet_icevision_fastai": "subcoco_effdet_icevision_fastai.html"
   }
 }
