@@ -22,17 +22,19 @@ index = {"fetch_data": "10_subcoco_utils.ipynb",
          "SubCocoParser": "20_subcoco_ivf.ipynb",
          "parse_subcoco": "20_subcoco_ivf.ipynb",
          "SaveModelDupBestCallback": "20_subcoco_ivf.ipynb",
+         "FastGPUMonitorCallback": "20_subcoco_ivf.ipynb",
          "gen_transforms_and_learner": "20_subcoco_ivf.ipynb",
-         "run_training": "30_subcoco_pl.ipynb",
-         "save_final": "30_subcoco_pl.ipynb",
-         "SubCocoDataset": "30_subcoco_pl.ipynb",
-         "TargetResize": "30_subcoco_pl.ipynb",
-         "SubCocoDataModule": "30_subcoco_pl.ipynb",
-         "FRCNN": "30_subcoco_pl.ipynb"}
+         "run_training": "40_subcoco_retinanet_lightning.ipynb",
+         "save_final": "40_subcoco_retinanet_lightning.ipynb",
+         "SubCocoDataset": "40_subcoco_retinanet_lightning.ipynb",
+         "SubCocoDataModule": "40_subcoco_retinanet_lightning.ipynb",
+         "FRCNN": "30_subcoco_frcnn_lightning.ipynb",
+         "RetinaNetModule": "40_subcoco_retinanet_lightning.ipynb"}
 
 modules = ["subcoco_utils.py",
            "subcoco_ivf.py",
-           "subcoco_pl.py"]
+           "subcoco_frcnn_lightning.py",
+           "subcoco_retnet_lightningl.py"]
 
 doc_url = "https://bguan.github.io/mcbbox"
 

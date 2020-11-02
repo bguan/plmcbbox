@@ -6,6 +6,7 @@ __all__ = ['fetch_data', 'fetch_subcoco', 'CocoDatasetStats', 'empty_list', 'loa
 
 # Cell
 import albumentations as A
+import cv2
 import glob
 import json
 import matplotlib.pyplot as plt
@@ -21,6 +22,7 @@ import tarfile
 import torch
 import torchvision
 
+from albumentations.pytorch import ToTensorV2
 from collections import defaultdict
 from functools import reduce
 from IPython.utils import io
@@ -118,7 +120,6 @@ class CocoDatasetStats():
 
         # img_id to file map
         self.img2fname = { img['id']:img['file_name'] for img in ann['images'] }
-        self.imgs = [ { 'id':img_id, 'file_name':img_fname } for (img_id, img_fname) in self.img2fname.items() ]
 
         # compute Images per channel means and std deviation using PIL.ImageStat.Stat()
 
@@ -128,12 +129,11 @@ class CocoDatasetStats():
         stddev = np.zeros((3,))
         avgw = 0
         avgh = 0
-        for img in tqdm(self.imgs):
-            img_id = img['id']
-            fname = self.img_dir/img['file_name']
-            if not os.path.isfile(fname): continue
+        for img_id, img_fname in tqdm(self.img2fname.items()):
+            img_fpath = self.img_dir/img_fname
+            if not os.path.isfile(img_fpath): continue
             n = n + 1
-            img = Image.open(fname)
+            img = Image.open(img_fpath)
             istat = ImageStat.Stat(img)
             width, height = img.size
             avgw = (width + (n-1)*avgw)/n
@@ -141,6 +141,10 @@ class CocoDatasetStats():
             mean = (istat.mean + (n-1)*mean)/n
             stddev = (istat.stddev + (n-1)*stddev)/n
             self.img2sz[img_id] = (width, height)
+
+        # cleanup stats due to missing images
+        self.num_imgs = len(self.img2sz)
+        self.img2fname = { img_id: fname for img_id, fname in self.img2fname.items() if img_id in self.img2sz }
 
         self.chn_means = mean
         self.chn_stds = stddev
