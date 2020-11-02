@@ -20,7 +20,7 @@ entries:
       title: Exploring Object Detection using Pytorch Lightning Only
       url: subcoco_retinanet_lightning.html
     - output: web,pdf
-      title: subcoco_effdet_icevision_fastai
+      title: Exploring Object Detection using Icevision w/ FastAI
       url: subcoco_effdet_icevision_fastai.html
     output: web
     title: mcbbox

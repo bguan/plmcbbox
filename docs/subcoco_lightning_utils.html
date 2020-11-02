@@ -31,6 +31,15 @@ nb_path: "20_subcoco_lightning_utils.ipynb"
 
 <div class="output_area">
 
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.8/dist-packages/wandb/util.py:36: DeprecationWarning: Using or importing the ABCs from &#39;collections&#39; instead of from &#39;collections.abc&#39; is deprecated since Python 3.3, and in 3.9 it will stop working
+  from collections import namedtuple, Mapping, Sequence
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Python ver 3.8.5 (default, Jul 28 2020, 12:59:40) 
 [GCC 9.3.0], torch 1.7.0, torchvision 0.8.0, pytorch_lightning 1.0.4, Albumentation 0.5.0
@@ -119,7 +128,7 @@ nb_path: "20_subcoco_lightning_utils.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubCocoDataset" class="doc_header"><code>class</code> <code>SubCocoDataset</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L44" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataset</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwds</code></strong>) :: <code>VisionDataset</code></p>
+<h2 id="SubCocoDataset" class="doc_header"><code>class</code> <code>SubCocoDataset</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L43" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataset</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwds</code></strong>) :: <code>VisionDataset</code></p>
 </blockquote>
 <p>Simulate what torchvision.CocoDetect() returns for target given fastai's coco subsets
 Args:
@@ -174,7 +183,7 @@ Args:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubCocoDataModule" class="doc_header"><code>class</code> <code>SubCocoDataModule</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L125" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataModule</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>LightningDataModule</code></p>
+<h2 id="SubCocoDataModule" class="doc_header"><code>class</code> <code>SubCocoDataModule</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L124" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataModule</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>LightningDataModule</code></p>
 </blockquote>
 <p>A DataModule standardizes the training, val, test splits, data preparation and transforms.
 The main advantage is consistent data splits, data preparation and transforms across models.</p>

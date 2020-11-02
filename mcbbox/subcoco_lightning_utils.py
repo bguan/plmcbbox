@@ -66,7 +66,7 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
                 for l, bs in l2bs.items():
                     safe_bs = []
                     for bx, by, bw, bh in bs:
-                        if box_within_bounds(bx, by, bw, bh, img_w, img_h, .05, .05):
+                        if box_within_bounds(bx, by, bw, bh, img_w, img_h, .1, .1):
                             safe_bs.append((bx, by, bw, bh))
                     if len(safe_bs) > 0:
                         safe_l2bs[l] = safe_bs

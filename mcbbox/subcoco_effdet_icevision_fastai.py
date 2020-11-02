@@ -21,12 +21,7 @@ import torch.multiprocessing
 import torchvision
 import xml.etree.ElementTree
 
-from albumentations import ShiftScaleRotate
 from collections import defaultdict
-from fastai.test_utils import synth_learner
-from fastai.learner import Learner
-from fastai.callback.training import GradientAccumulation
-from fastai.callback.tracker import Callback, EarlyStoppingCallback, SaveModelCallback
 from IPython.utils import io
 from pathlib import Path
 from PIL import Image, ImageStat
@@ -43,6 +38,10 @@ import icevision.models.rcnn.faster_rcnn as faster_rcnn
 import icevision.tfms as tfms
 
 from albumentations import ShiftScaleRotate
+from fastai.test_utils import synth_learner
+from fastai.learner import Learner
+from fastai.callback.training import GradientAccumulation
+from fastai.callback.tracker import Callback, EarlyStoppingCallback, SaveModelCallback
 from gpumonitor.monitor import GPUStatMonitor
 from gpumonitor.callbacks.lightning import PyTorchGpuMonitorCallback
 from icevision.core import BBox, ClassMap, BaseRecord

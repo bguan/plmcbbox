@@ -169,7 +169,7 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_ckpt_
 
     # transforms for images
     bbox_aware_train_tfms=A.Compose([
-        A.ShiftScaleRotate(shift_limit=.025, scale_limit=0.025, rotate_limit=9),
+        A.ShiftScaleRotate(shift_limit=.01, scale_limit=0.05, rotate_limit=9),
         A.Resize(width=img_sz, height=img_sz),
         A.HorizontalFlip(p=0.5),
         A.RGBShift(),
