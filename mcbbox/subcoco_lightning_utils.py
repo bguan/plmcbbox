@@ -77,7 +77,7 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
                     stats.img2l2bs[img_id] = safe_l2bs
                     self.img_ids.append(img_id)
 
-        if n_missing > 0 : print(f'Warning: {n_missing} image files are missing or have unsafe boxes!!!')
+        if n_missing > 0 : print(f'Warning: {n_missing} out of {stats.num_imgs} image files are missing or have unsafe boxes!!!')
         self.bbox_aware_tfms = bbox_aware_tfms
 
     def __getitem__(self, index):
