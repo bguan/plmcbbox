@@ -25,7 +25,6 @@ from pycocotools.cocoeval import COCOeval
 from torch import nn
 from torch import optim
 from torch.utils.data import DataLoader, random_split
-from torchvision.models.detection import RetinaNet, retinanet_resnet50_fpn
 
 from torchvision import transforms
 
@@ -124,7 +123,7 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
 # Cell
 class SubCocoDataModule(LightningDataModule):
 
-    def __init__(self, root, stats, bs=32, workers=4, split_ratio=0.8, shuffle=True,
+    def __init__(self, root, stats, bs=32, workers=4, split_ratio=0.9, shuffle=True,
                  train_transforms=None, val_transforms=None):
         super().__init__(train_transforms=train_transforms, val_transforms=val_transforms)
         self.dir = root

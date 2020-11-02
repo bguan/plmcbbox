@@ -22,17 +22,9 @@ from PIL import ImageStat
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 
-from torch import nn
-from torch import optim
-from torch.utils.data import DataLoader, random_split
-from torchvision.models.detection import RetinaNet, retinanet_resnet50_fpn
-
-from torchvision import transforms
-
 from tqdm import tqdm
 from typing import Hashable, List, Tuple, Union
 
-torch.multiprocessing.set_sharing_strategy('file_system')
 
 # Cell
 import albumentations as A
@@ -43,9 +35,15 @@ from gpumonitor.callbacks.lightning import PyTorchGpuMonitorCallback
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from pytorch_lightning import LightningDataModule, LightningModule, Trainer
 from pytorch_lightning.core.step_result import TrainResult
+from torch import nn
+from torch import optim
+from torch.utils.data import DataLoader, random_split
+from torchvision.models.detection import RetinaNet, retinanet_resnet50_fpn
+from torchvision import transforms
 from .subcoco_utils import *
 from .subcoco_lightning_utils import *
 
+torch.multiprocessing.set_sharing_strategy('file_system')
 print(f"Python ver {sys.version}, torch {torch.__version__}, torchvision {torchvision.__version__}, pytorch_lightning {pl.__version__}, Albumentation {A.__version__}")
 if torch.cuda.is_available(): monitor = GPUStatMonitor(delay=1)
 
