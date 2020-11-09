@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 from mcbbox.subcoco_utils import *
 from mcbbox.subcoco_effdet_icevision_fastai import *
 
@@ -17,4 +18,4 @@ run_training(learn, min_lr=0.01, head_runs=1, full_runs=1)
 
 save_model_fpath = f'models/{arch}-subcoco-{img_sz}-220-final.pth'
 save_final(learn, save_model_fpath)
-
+sys.exit(f'Run ended, model saved to {save_model_fpath}')

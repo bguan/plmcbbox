@@ -24,6 +24,7 @@ from pycocotools.cocoeval import COCOeval
 
 from torch import nn
 from torch import optim
+from torch.nn.modules import module
 from torch.utils.data import DataLoader, random_split
 
 from torchvision import transforms
@@ -34,8 +35,6 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 
 from tqdm import tqdm
 from typing import Hashable, List, Tuple, Union
-
-torch.multiprocessing.set_sharing_strategy('file_system')
 
 # Cell
 
@@ -50,13 +49,20 @@ from pytorch_lightning.core.step_result import TrainResult
 from .subcoco_utils import *
 from .subcoco_lightning_utils import *
 
+torch.multiprocessing.set_sharing_strategy('file_system')
 print(f"Python ver {sys.version}, torch {torch.__version__}, torchvision {torchvision.__version__}, pytorch_lightning {pl.__version__}, Albumentation {A.__version__}")
-if torch.cuda.is_available(): monitor = GPUStatMonitor(delay=1)
+if torch.cuda.is_available():
+    monitor = GPUStatMonitor(delay=1)
+else:
+    print("CUDA not available!")
+
+if is_notebook():
+    from nbdev.showdoc import *
 
 # Cell
 class FRCNN(LightningModule):
 
-    def __init__(self, lbl2name:dict={}, img_sz=128, lr:float=1e-3):
+    def __init__(self, num_classes:int=1, img_sz=128, lr:float=1e-3, test:bool=False):
         LightningModule.__init__(self)
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
 
@@ -64,12 +70,12 @@ class FRCNN(LightningModule):
         self.in_features = self.model.roi_heads.box_predictor.cls_score.in_features
 
         #refit another head
-        self.categories = [ {'id': l, 'name': n } for l, n in lbl2name.items() ]
-        self.num_classes = len(self.categories)
+        self.num_classes = num_classes
         # replace the pre-trained head with a new one, which is trainable
         self.model.roi_heads.box_predictor = FastRCNNPredictor(self.in_features, self.num_classes+1)
         self.img_sz = img_sz
         self.lr = lr
+        self.test = test
 
         # Hacked to avoid model builtin call to GeneralizedRCNNTransform.normalize() as done in augmentation
         def noop_normalize(image): return image
@@ -84,28 +90,42 @@ class FRCNN(LightningModule):
         self.freeze()
         self.unfreeze_head()
 
+    def _set_grad(self, mod:module, requires_grad:bool=True):
+        for param in mod.parameters():
+            param.requires_grad = requires_grad
+
     def freeze_head(self):
-        for param in self.model.roi_heads.parameters(): param.requires_grad = False
+        self._set_grad(self.model.roi_heads, requires_grad=False)
 
     def unfreeze_head(self):
-        for param in self.model.roi_heads.parameters(): param.requires_grad = True
+        self._set_grad(self.model.roi_heads, requires_grad=True)
 
-    def freeze(self):
-        for param in self.model.parameters(): param.requires_grad = False
+    def freeze_backbone(self):
+        self._set_grad(self.model.backbone, requires_grad=False)
 
-    def unfreeze(self):
-        for param in self.model.parameters(): param.requires_grad = True
+    def unfreeze_backbone(self):
+        self._set_grad(self.model.backbone, requires_grad=True)
+
+    def freeze_batchnorm(self):
+        for m in self.model.modules():
+            if type(m) is torch.nn.BatchNorm2d:
+                self._set_grad(m, requires_grad=False)
+
+    def unfreeze_batchnorm(self):
+        for m in self.model.modules():
+            if type(m) is torch.nn.BatchNorm2d:
+                self._set_grad(m, requires_grad=True)
 
     # FRCNN is tricky, in training model the model takes X & Y to produce loss
     def training_step(self, train_batch, batch_idx):
-#         print('Entering training_step')
+        if self.test: print('Entering training_step')
         self.model.cuda()
         self.model.train()
         xs, ys = train_batch
         losses = self.model.forward(xs, ys)
         # has 4 types of losses: loss_classifier loss_box_reg loss_objectness loss_rpn_box_reg
         loss = sum(losses.values())
-#         print(f'Exiting training_step, returning {loss}')
+        if self.test: print(f'Exiting training_step, returning {loss}')
         return loss
 
     def metrics(self, preds, targets):
@@ -116,7 +136,7 @@ class FRCNN(LightningModule):
         return metrics
 
     def validation_step(self, val_batch, batch_idx):
-#         print('Entering validation_step')
+        if self.test: print('Entering validation_step')
         self.model.cpu()
         self.model.eval()
 
@@ -131,8 +151,8 @@ class FRCNN(LightningModule):
             self.model.train()
             losses = self.model(xs_cpu, ys_cpu)
 
-        result = {'val_acc': metrics[:,0], 'val_coco': metrics[:,1], 'val_loss': sum(losses.values())}
-#         print(f'Exiting validation_step, returning {result}')
+        result = {'val_acc': metrics[:,0].mean(), 'val_coco': metrics[:,1].mean(), 'val_loss': sum(losses.values())}
+        if self.test: print(f'Exiting validation_step, returning {result}')
         return result
 
     def configure_optimizers(self):
@@ -140,21 +160,20 @@ class FRCNN(LightningModule):
         return optimizer
 
     def validation_epoch_end(self, outputs):
+        if self.test: print('Entering validation_epoch_end')
         tensorboard_logs ={}
-        # called at the end of the validation epoch, but gradient accumulation may result in last row being different size
-        val_accs = np.concatenate([ (o['val_acc']).numpy() for o in outputs ])
-        avg_acc = val_accs.mean()
+        avg_acc = sum([ o['val_acc'] for o in outputs ])/len(outputs)
         tensorboard_logs['val_acc'] = avg_acc
 
-        val_cocos = np.concatenate([ (o['val_coco']).numpy() for o in outputs ])
-        avg_coco = val_cocos.mean()
+        avg_coco = sum([ o['val_coco'] for o in outputs ])/len(outputs)
         tensorboard_logs['val_coco'] = avg_coco
 
-        val_losses = np.array([ float(o['val_loss']) for o in outputs ])
-        avg_loss = val_losses.mean()
+        avg_loss = sum([ o['val_loss'] for o in outputs ])/len(outputs)
         tensorboard_logs['val_loss'] = avg_loss
         print(f"Epoch end avg val_acc = {avg_acc} (F1 @ IoU>.5, Score>.5), avg val_coco = {avg_coco}, avg val_loss = {avg_loss}")
-        self.log_dict({'val_acc': avg_acc, 'val_coco': avg_coco, 'val_loss': avg_loss, 'logs': tensorboard_logs})
+        result = {'val_acc': avg_acc, 'val_coco': avg_coco, 'val_loss': avg_loss, 'logs': tensorboard_logs}
+        if self.test: print(f'Exiting validation_epoch_end, returning {result}')
+        self.log_dict(result)
 
     # forward takes only X, so need to put FRCNN in eval mode
     def forward(self, xs):
@@ -164,14 +183,34 @@ class FRCNN(LightningModule):
 # Cell
 def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_ckpt_fname:str=None,
                  img_sz=384, bs=12, acc=4, workers=4, head_runs=50, full_runs=200,
-                 monitor='val_acc', mode='max', save_top=-1,
+                 monitor='val_acc', mode='max', save_top=-1, test=False
                 ):
 
-    frcnn_model = FRCNN(lbl2name=stats.lbl2name, img_sz=img_sz)
+    resume_ckpt = f'{modeldir}/{resume_ckpt_fname}' if resume_ckpt_fname != None else None
+
+    if resume_ckpt and os.path.isfile(resume_ckpt):
+        try:
+            print(f'Loading previously saved model: {resume_ckpt}...')
+            frcnn_model = FRCNN.load_from_checkpoint(resume_ckpt, num_classes=len(stats.lbl2name), img_sz=img_sz)
+        except Exception as e:
+            print(f'Unexpected error loading previously saved model {resume_ckpt}: {e}')
+            frcnn_model = FRCNN(num_classes=len(stats.lbl2name), img_sz=img_sz, test=test)
+    else:
+        if resume_ckpt: print(f'Failed to find {resume_ckpt}')
+        frcnn_model = FRCNN(num_classes=len(stats.lbl2name), img_sz=img_sz, test=test)
 
     print(f"Training with image size {img_sz}, auto learning rate, for {head_runs}+{full_runs} epochs.")
-    chkpt_cb = ModelCheckpoint(
-        filename='FRCNN-subcoco-'+str(img_sz)+'-{epoch:03d}-{'+monitor+':.3f}',
+    head_chkpt_cb = ModelCheckpoint(
+        filename='FRCNN-HEAD-subcoco-'+str(img_sz)+'-{epoch:03d}-{'+monitor+':.3f}',
+        dirpath=modeldir,
+        save_last=True,
+        monitor=monitor,
+        mode=mode,
+        save_top_k=save_top,
+        verbose=True,
+    )
+    full_chkpt_cb = ModelCheckpoint(
+        filename='FRCNN-FULL-subcoco-'+str(img_sz)+'-{epoch:03d}-{'+monitor+':.3f}',
         dirpath=modeldir,
         save_last=True,
         monitor=monitor,
@@ -188,15 +227,6 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_ckpt_
     )
     gpumon_cb = PyTorchGpuMonitorCallback(delay=1)
     callbacks = [early_stop_cb, gpumon_cb]
-    resume_ckpt = f'{modeldir}/{resume_ckpt_fname}' if resume_ckpt_fname != None else None
-    if resume_ckpt and os.path.isfile(resume_ckpt):
-        try:
-            print(f'Loading previously saved model: {resume_ckpt}...')
-            frcnn_model = FRCNN.load_from_checkpoint(resume_ckpt, lbl2name=stats.lbl2name)
-        except Exception as e:
-            print(f'Unexpected error loading previously saved model {resume_ckpt}: {e}')
-    elif resume_ckpt:
-        print(f'Failed to find {resume_ckpt}')
 
     # transforms for images
     bbox_aware_train_tfms=A.Compose([
@@ -220,7 +250,10 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_ckpt_
                                     train_transforms=bbox_aware_train_tfms, val_transforms=bbox_aware_val_tfms,
                                     bs=bs*2, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=head_runs, default_root_dir = 'models',
-                          callbacks=callbacks, checkpoint_callback=chkpt_cb, accumulate_grad_batches=int(acc//2))
+                          callbacks=callbacks, checkpoint_callback=head_chkpt_cb, accumulate_grad_batches=int(acc//2))
+        frcnn_model.unfreeze_head()
+        frcnn_model.freeze_backbone()
+        frcnn_model.unfreeze_batchnorm()
         trainer.fit(frcnn_model, head_dm)
 
     if full_runs > 0:
@@ -230,12 +263,16 @@ def run_training(stats:CocoDatasetStats, modeldir:str, img_dir:str, resume_ckpt_
                                     train_transforms=bbox_aware_train_tfms, val_transforms=bbox_aware_val_tfms,
                                     bs=bs, workers=workers)
         trainer = Trainer(gpus=1, auto_lr_find=True, max_epochs=full_runs, default_root_dir = 'models',
-                          callbacks=callbacks, checkpoint_callback=chkpt_cb, accumulate_grad_batches=acc)
+                          callbacks=callbacks, checkpoint_callback=full_chkpt_cb, accumulate_grad_batches=acc)
+        frcnn_model.unfreeze_head()
+        frcnn_model.unfreeze_backbone()
+        frcnn_model.unfreeze_batchnorm()
         trainer.fit(frcnn_model, full_dm)
 
-    last_model_fpath=Path(chkpt_cb.last_model_path)
-    saved_last_model_fpath=str(last_model_fpath.parent/f'FRCNN-subcoco-{img_sz}-last')+last_model_fpath.suffix
-    os.rename(str(last_model_fpath), saved_last_model_fpath)
+    if full_runs > 0:
+        last_model_fpath=Path(full_chkpt_cb.last_model_path)
+        saved_last_model_fpath=str(last_model_fpath.parent/f'FRCNN-subcoco-{img_sz}-last')+last_model_fpath.suffix
+        os.rename(str(last_model_fpath), saved_last_model_fpath)
 
     return frcnn_model, str(saved_last_model_fpath)
 

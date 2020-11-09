@@ -48,7 +48,8 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
         stats (CocoDatasetStats):
     """
 
-    def __init__(self, root:str, stats:CocoDatasetStats, img_ids:list=[], bbox_aware_tfms:callable=None):
+    def __init__(self, root:str, stats:CocoDatasetStats, img_ids:list=[],
+                 bbox_aware_tfms:callable=None, safe_box_margin:float=0.0, safe_box_size:float=0.0):
         super(SubCocoDataset, self).__init__(root)
         self.stats = stats
         self.img_ids = []
@@ -59,6 +60,8 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
                 n_missing += 1
             elif stats.img2sz.get(img_id, None) is None:
                 n_missing += 1
+            elif safe_box_size <= 0.0 and safe_box_margin <= 0.0:
+                self.img_ids.append(img_id)
             else:
                 img_w, img_h = stats.img2sz[img_id]
                 l2bs = stats.img2l2bs[img_id]
@@ -66,7 +69,7 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
                 for l, bs in l2bs.items():
                     safe_bs = []
                     for bx, by, bw, bh in bs:
-                        if box_within_bounds(bx, by, bw, bh, img_w, img_h, .1, .1):
+                        if box_within_bounds(bx, by, bw, bh, img_w, img_h, safe_box_margin, safe_box_size):
                             safe_bs.append((bx, by, bw, bh))
                     if len(safe_bs) > 0:
                         safe_l2bs[l] = safe_bs
@@ -110,6 +113,7 @@ class SubCocoDataset(torchvision.datasets.VisionDataset):
             transformed = self.bbox_aware_tfms(image=img, bboxes=target['boxes'], class_labels=target['labels'])
             img = transformed['image']
             target['boxes'] = transformed['bboxes']
+            target['labels'] = transformed['class_labels']
 
         for k, v in target.items():
             target[k] = torch.tensor(v, dtype=(torch.float if k in ['boxes', 'width', 'height', 'areas'] else torch.long))

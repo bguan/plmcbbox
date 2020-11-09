@@ -14,14 +14,21 @@ entries:
         and FastAI
       url: subcoco_utils.html
     - output: web,pdf
+      title: Exploring Object Detection using Icevision w/ FastAI
+      url: subcoco_effdet_icevision_fastai.html
+    - output: web,pdf
       title: Pytorch Lightning Specific Utilities
       url: subcoco_lightning_utils.html
     - output: web,pdf
-      title: Exploring Object Detection using Pytorch Lightning Only
-      url: subcoco_retinanet_lightning.html
+      title: Exploring Object Detection using Faster RCNN and Pytorch Lightning
+      url: subcoco_frcnn_lightning.html
     - output: web,pdf
-      title: Exploring Object Detection using Icevision w/ FastAI
-      url: subcoco_effdet_icevision_fastai.html
+      title: Exploring Object Detection using EffDet and Pytorch Lightning
+      url: subcoco_effdet_lightning.html
+    - output: web,pdf
+      title: Exploring Object Detection using RetinaNet in Torch Vision 0.8 and Pytorch
+        Lightning
+      url: subcoco_retinanet_lightning.html
     output: web
     title: mcbbox
   output: web

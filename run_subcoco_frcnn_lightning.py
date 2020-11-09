@@ -1,4 +1,5 @@
 #! /usr/bin/python
+import sys
 from mcbbox.subcoco_utils import *
 from mcbbox.subcoco_frcnn_lightning import *
 
@@ -15,3 +16,4 @@ frcnn_model, last_save_fname = run_training(
         monitor='val_loss', mode='min', save_top=-1)
 model_save_path = f"models/FRCNN-{froot}-{img_sz}-last.saved"
 save_final(frcnn_model, model_save_path)
+sys.exit(f'Run ended, model saved to {model_save_path}')

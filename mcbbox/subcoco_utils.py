@@ -2,7 +2,7 @@
 
 __all__ = ['fetch_data', 'fetch_subcoco', 'CocoDatasetStats', 'empty_list', 'load_stats', 'box_within_bounds',
            'is_notebook', 'overlay_img_bbox', 'bbox_to_rect', 'label_for_bbox', 'listify', 'tensorify',
-           'SubCocoWrapper', 'iou_calc', 'match_true_false_neg', 'calc_wavg_F1', 'digest_pred']
+           'SubCocoWrapper', 'iou_calc', 'match_true_false_neg', 'calc_wavg_F1', 'clamp_fn', 'digest_pred']
 
 # Cell
 import albumentations as A
@@ -406,15 +406,21 @@ def calc_wavg_F1(pred, tgt, scut=0.5, ithr=0.5):
     return acc
 
 # Cell
-def digest_pred(l2name, pred, cutoff=0.5):
+def clamp_fn(lo, hi):
+    return lambda v: min(hi,max(lo,v))
+
+def digest_pred(l2name, pred, cutoff=0.5, img_sz=128):
     scores = pred['scores']
-    pass_idxs = (scores > cutoff).nonzero(as_tuple=False)
+    pass_idxs = [i for i in range(len(scores)) if scores[i] > cutoff]
     lbls = pred['labels'][pass_idxs]
     bboxs = pred['boxes'][pass_idxs]
+    if len(pass_idxs) > 1:
+        lbls = lbls.squeeze()
+        bboxs = bboxs.squeeze()
     l2bs = defaultdict(lambda: [])
-    for l, b in zip(lbls, bboxs):
-        x,y,w,h = b[0]
-        n = l2name[l.item()]
-        bs = l2bs[l.item()]
-        bs.append((x.item(),y.item(),w.item(),h.item()))
+    for l, b in zip(lbls.tolist(), bboxs.tolist()):
+        l = int(l)
+        x,y,w,h = map(clamp_fn(0,img_sz), b)
+        bs = l2bs[l]
+        bs.append((x,y,w,h))
     return l2bs

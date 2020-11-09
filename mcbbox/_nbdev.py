@@ -18,24 +18,27 @@ index = {"fetch_data": "10_subcoco_utils.ipynb",
          "iou_calc": "10_subcoco_utils.ipynb",
          "match_true_false_neg": "10_subcoco_utils.ipynb",
          "calc_wavg_F1": "10_subcoco_utils.ipynb",
+         "clamp_fn": "10_subcoco_utils.ipynb",
          "digest_pred": "10_subcoco_utils.ipynb",
+         "SubCocoParser": "15_subcoco_effdet_icevision_fastai.ipynb",
+         "parse_subcoco": "15_subcoco_effdet_icevision_fastai.ipynb",
+         "SaveModelDupBestCallback": "15_subcoco_effdet_icevision_fastai.ipynb",
+         "FastGPUMonitorCallback": "15_subcoco_effdet_icevision_fastai.ipynb",
+         "gen_transforms_and_learner": "15_subcoco_effdet_icevision_fastai.ipynb",
+         "run_training": "50_subcoco_retinanet_lightning.ipynb",
+         "save_final": "50_subcoco_retinanet_lightning.ipynb",
          "SubCocoDataset": "20_subcoco_lightning_utils.ipynb",
          "SubCocoDataModule": "20_subcoco_lightning_utils.ipynb",
          "FRCNN": "30_subcoco_frcnn_lightning.ipynb",
-         "run_training": "50_subcoco_effdet_icevision_fastai.ipynb",
-         "save_final": "50_subcoco_effdet_icevision_fastai.ipynb",
-         "RetinaNetModule": "40_subcoco_retinanet_lightning.ipynb",
-         "SubCocoParser": "50_subcoco_effdet_icevision_fastai.ipynb",
-         "parse_subcoco": "50_subcoco_effdet_icevision_fastai.ipynb",
-         "SaveModelDupBestCallback": "50_subcoco_effdet_icevision_fastai.ipynb",
-         "FastGPUMonitorCallback": "50_subcoco_effdet_icevision_fastai.ipynb",
-         "gen_transforms_and_learner": "50_subcoco_effdet_icevision_fastai.ipynb"}
+         "EffDetModule": "40_subcoco_effdet_lightning.ipynb",
+         "RetinaNetModule": "50_subcoco_retinanet_lightning.ipynb"}
 
 modules = ["subcoco_utils.py",
+           "subcoco_effdet_icevision_fastai.py",
            "subcoco_lightning_utils.py",
            "subcoco_frcnn_lightning.py",
-           "subcoco_retnet_lightning.py",
-           "subcoco_effdet_icevision_fastai.py"]
+           "subcoco_effdet_lightning.py",
+           "subcoco_retnet_lightning.py"]
 
 doc_url = "https://bguan.github.io/mcbbox"
 
