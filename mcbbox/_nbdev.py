@@ -25,13 +25,13 @@ index = {"fetch_data": "10_subcoco_utils.ipynb",
          "SaveModelDupBestCallback": "15_subcoco_effdet_icevision_fastai.ipynb",
          "FastGPUMonitorCallback": "15_subcoco_effdet_icevision_fastai.ipynb",
          "gen_transforms_and_learner": "15_subcoco_effdet_icevision_fastai.ipynb",
-         "run_training": "50_subcoco_retinanet_lightning.ipynb",
-         "save_final": "50_subcoco_retinanet_lightning.ipynb",
+         "run_training": "50_subcoco_retinanet_lightning.ipynb.ipynb",
+         "save_final": "50_subcoco_retinanet_lightning.ipynb.ipynb",
          "SubCocoDataset": "20_subcoco_lightning_utils.ipynb",
          "SubCocoDataModule": "20_subcoco_lightning_utils.ipynb",
          "FRCNN": "30_subcoco_frcnn_lightning.ipynb",
          "EffDetModule": "40_subcoco_effdet_lightning.ipynb",
-         "RetinaNetModule": "50_subcoco_retinanet_lightning.ipynb"}
+         "RetinaNetModule": "50_subcoco_retinanet_lightning.ipynb.ipynb"}
 
 modules = ["subcoco_utils.py",
            "subcoco_effdet_icevision_fastai.py",

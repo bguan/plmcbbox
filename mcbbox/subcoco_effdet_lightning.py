@@ -158,7 +158,7 @@ class EffDetModule(LightningModule):
         return safe_xs, safe_ys
 
     def stack_images(self, xs):
-        xs_stack = torch.stack([xs[i] if i < len(xs) else torch.zeros((3, self.img_sz, self.img_sz)) for i in range(self.bs)])
+        xs_stack = torch.stack([xs[i] if i < len(xs) else torch.zeros((3, self.img_sz, self.img_sz)).cuda() for i in range(self.bs)])
         return xs_stack
 
     def pack_target(self, ys):

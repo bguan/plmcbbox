@@ -6,6 +6,6 @@
     "Pytorch Lightning Specific Utilities": "subcoco_lightning_utils.html",
     "Exploring Object Detection using Faster RCNN and Pytorch Lightning": "subcoco_frcnn_lightning.html",
     "Exploring Object Detection using EffDet and Pytorch Lightning": "subcoco_effdet_lightning.html",
-    "Exploring Object Detection using RetinaNet in Torch Vision 0.8 and Pytorch Lightning": "subcoco_retinanet_lightning.html"
+    "Exploring Object Detection using RetinaNet in Torch Vision 0.8 and Pytorch Lightning": "subcoco_retinanet_lightning.ipynb.html"
   }
 }

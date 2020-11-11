@@ -205,7 +205,7 @@ def gen_transforms_and_learner(stats:CocoDatasetStats,
 
 # Cell
 # Wrap in function this doesn't run upon import or when generating docs
-def run_training(learn:Learner, min_lr=0.05, head_runs=1, full_runs=1):
+def run_training(learn:Learner, min_lr=0.01, head_runs=1, full_runs=1):
     monitor.display_average_stats_per_gpu()
     print(f"Training for {head_runs}+{full_runs} epochs at min LR {min_lr}")
     learn.fine_tune(full_runs, min_lr, freeze_epochs=head_runs)

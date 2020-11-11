@@ -28,7 +28,7 @@ entries:
     - output: web,pdf
       title: Exploring Object Detection using RetinaNet in Torch Vision 0.8 and Pytorch
         Lightning
-      url: subcoco_retinanet_lightning.html
+      url: subcoco_retinanet_lightning.ipynb.html
     output: web
     title: mcbbox
   output: web
