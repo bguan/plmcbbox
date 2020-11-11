@@ -43,7 +43,6 @@ from fastai.learner import Learner
 from fastai.callback.training import GradientAccumulation
 from fastai.callback.tracker import Callback, EarlyStoppingCallback, SaveModelCallback
 from gpumonitor.monitor import GPUStatMonitor
-from gpumonitor.callbacks.lightning import PyTorchGpuMonitorCallback
 from icevision.core import BBox, ClassMap, BaseRecord
 from icevision.parsers import Parser
 from icevision.parsers.mixins import LabelsMixin, BBoxesMixin, FilepathMixin, SizeMixin

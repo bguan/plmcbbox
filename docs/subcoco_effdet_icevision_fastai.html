@@ -88,7 +88,7 @@ nb_path: "15_subcoco_effdet_icevision_fastai.ipynb"
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/content/drive/My Drive/ColabData&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Current Directory is now </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="o">!</span>wget -O <span class="s1">&#39;mcbbox/subcoco_utils.py&#39;</span> https://raw.githubusercontent.com/bguan/mcbbox/master/mcbbox/subcoco_utils.py
-    <span class="o">!</span>pip install torch torchvision <span class="nv">albumentation</span><span class="o">==</span><span class="m">0</span>.5.0 fastai <span class="nv">icevision</span><span class="o">==</span><span class="m">0</span>.3.0 <span class="nv">effdet</span><span class="o">==</span><span class="m">0</span>.2.1 gpumonitor
+    <span class="o">!</span>pip install torch torchvision <span class="nv">albumentations</span><span class="o">==</span><span class="m">0</span>.5.0 <span class="nv">fastai</span><span class="o">==</span><span class="m">2</span>.1.5 fastai2-extensions<span class="o">==</span><span class="m">0</span>.0.31 <span class="nv">icevision</span><span class="o">==</span><span class="m">0</span>.3.0 <span class="nv">effdet</span><span class="o">==</span><span class="m">0</span>.2.1 <span class="nv">requests</span><span class="o">==</span><span class="m">2</span>.24 <span class="nv">PyYAML</span><span class="o">==</span><span class="m">5</span>.1 gpumonitor
 </pre></div>
 
     </div>
@@ -285,7 +285,7 @@ Image means by channel [126.2909314  109.02263367 100.61073242], std.dev by chan
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubCocoParser" class="doc_header"><code>class</code> <code>SubCocoParser</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L66" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoParser</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>min_margin_ratio</code></strong>=<em><code>0</code></em>, <strong><code>min_width_height_ratio</code></strong>=<em><code>0</code></em>, <strong><code>quiet</code></strong>=<em><code>True</code></em>) :: <code>Parser</code></p>
+<h2 id="SubCocoParser" class="doc_header"><code>class</code> <code>SubCocoParser</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L65" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoParser</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>min_margin_ratio</code></strong>=<em><code>0</code></em>, <strong><code>min_width_height_ratio</code></strong>=<em><code>0</code></em>, <strong><code>quiet</code></strong>=<em><code>True</code></em>) :: <code>Parser</code></p>
 </blockquote>
 <p>Base class for all parsers, implements the main parsing logic.</p>
 <p>The actual fields to be parsed are defined by the mixins used when
@@ -333,7 +333,7 @@ I would set min_margin_ratio = 0.05, min_width_height_ratio = 0.05.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="parse_subcoco" class="doc_header"><code>parse_subcoco</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L124" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parse_subcoco</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>)</p>
+<h4 id="parse_subcoco" class="doc_header"><code>parse_subcoco</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L123" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>parse_subcoco</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>)</p>
 </blockquote>
 
 </div>
@@ -444,7 +444,7 @@ I would set min_margin_ratio = 0.05, min_width_height_ratio = 0.05.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SaveModelDupBestCallback" class="doc_header"><code>class</code> <code>SaveModelDupBestCallback</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L130" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SaveModelDupBestCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>fname</code></strong>=<em><code>'model'</code></em>, <strong><code>every_epoch</code></strong>=<em><code>False</code></em>, <strong><code>with_opt</code></strong>=<em><code>False</code></em>, <strong><code>reset_on_fit</code></strong>=<em><code>True</code></em>) :: <code>SaveModelCallback</code></p>
+<h2 id="SaveModelDupBestCallback" class="doc_header"><code>class</code> <code>SaveModelDupBestCallback</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L129" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SaveModelDupBestCallback</code>(<strong><code>monitor</code></strong>=<em><code>'valid_loss'</code></em>, <strong><code>comp</code></strong>=<em><code>None</code></em>, <strong><code>min_delta</code></strong>=<em><code>0.0</code></em>, <strong><code>fname</code></strong>=<em><code>'model'</code></em>, <strong><code>every_epoch</code></strong>=<em><code>False</code></em>, <strong><code>with_opt</code></strong>=<em><code>False</code></em>, <strong><code>reset_on_fit</code></strong>=<em><code>True</code></em>) :: <code>SaveModelCallback</code></p>
 </blockquote>
 <p>Extend SaveModelCallback to save a duplicate with metric added to end of filename</p>
 
@@ -494,7 +494,7 @@ I would set min_margin_ratio = 0.05, min_width_height_ratio = 0.05.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="FastGPUMonitorCallback" class="doc_header"><code>class</code> <code>FastGPUMonitorCallback</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L151" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FastGPUMonitorCallback</code>(<strong><code>delay</code></strong>=<em><code>1</code></em>, <strong><code>display_options</code></strong>=<em><code>None</code></em>) :: <code>Callback</code></p>
+<h2 id="FastGPUMonitorCallback" class="doc_header"><code>class</code> <code>FastGPUMonitorCallback</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L150" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>FastGPUMonitorCallback</code>(<strong><code>delay</code></strong>=<em><code>1</code></em>, <strong><code>display_options</code></strong>=<em><code>None</code></em>) :: <code>Callback</code></p>
 </blockquote>
 <p>Basic class handling tweaks of the training loop by changing a <code>Learner</code> in various events</p>
 
@@ -519,7 +519,7 @@ I would set min_margin_ratio = 0.05, min_width_height_ratio = 0.05.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="gen_transforms_and_learner" class="doc_header"><code>gen_transforms_and_learner</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L165" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gen_transforms_and_learner</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>train_records</code></strong>:<code>List</code>[<code>BaseRecord</code>], <strong><code>valid_records</code></strong>:<code>List</code>[<code>BaseRecord</code>], <strong><code>img_sz</code></strong>=<em><code>128</code></em>, <strong><code>bs</code></strong>=<em><code>4</code></em>, <strong><code>acc_cycs</code></strong>=<em><code>8</code></em>, <strong><code>num_workers</code></strong>=<em><code>2</code></em>)</p>
+<h4 id="gen_transforms_and_learner" class="doc_header"><code>gen_transforms_and_learner</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L164" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>gen_transforms_and_learner</code>(<strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>train_records</code></strong>:<code>List</code>[<code>BaseRecord</code>], <strong><code>valid_records</code></strong>:<code>List</code>[<code>BaseRecord</code>], <strong><code>img_sz</code></strong>=<em><code>128</code></em>, <strong><code>bs</code></strong>=<em><code>4</code></em>, <strong><code>acc_cycs</code></strong>=<em><code>8</code></em>, <strong><code>num_workers</code></strong>=<em><code>2</code></em>)</p>
 </blockquote>
 
 </div>
@@ -659,7 +659,7 @@ I would set min_margin_ratio = 0.05, min_width_height_ratio = 0.05.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_training" class="doc_header"><code>run_training</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L208" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_training</code>(<strong><code>learn</code></strong>:<code>Learner</code>, <strong><code>min_lr</code></strong>=<em><code>0.01</code></em>, <strong><code>head_runs</code></strong>=<em><code>1</code></em>, <strong><code>full_runs</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="run_training" class="doc_header"><code>run_training</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L207" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_training</code>(<strong><code>learn</code></strong>:<code>Learner</code>, <strong><code>min_lr</code></strong>=<em><code>0.01</code></em>, <strong><code>head_runs</code></strong>=<em><code>1</code></em>, <strong><code>full_runs</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 
 </div>
@@ -876,7 +876,7 @@ Backup models/tf_efficientdet_lite0-128.pth as models/tf_efficientdet_lite0-128@
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="save_final" class="doc_header"><code>save_final</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L214" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_final</code>(<strong><code>learn</code></strong>:<code>Learner</code>, <strong><code>save_model_fpath</code></strong>:<code>str</code>)</p>
+<h4 id="save_final" class="doc_header"><code>save_final</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_effdet_icevision_fastai.py#L213" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_final</code>(<strong><code>learn</code></strong>:<code>Learner</code>, <strong><code>save_model_fpath</code></strong>:<code>str</code>)</p>
 </blockquote>
 
 </div>
