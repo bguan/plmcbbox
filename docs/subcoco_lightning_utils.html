@@ -119,7 +119,7 @@ nb_path: "20_subcoco_lightning_utils.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubCocoDataset" class="doc_header"><code>class</code> <code>SubCocoDataset</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L43" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataset</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwds</code></strong>) :: <code>VisionDataset</code></p>
+<h2 id="SubCocoDataset" class="doc_header"><code>class</code> <code>SubCocoDataset</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L52" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataset</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwds</code></strong>) :: <code>VisionDataset</code></p>
 </blockquote>
 <p>Simulate what torchvision.CocoDetect() returns for target given fastai's coco subsets
 Args:
@@ -152,6 +152,70 @@ Args:
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Custom-Transforms">Custom Transforms<a class="anchor-link" href="#Custom-Transforms"> </a></h2><p>Albumentations Normalize() seems to produce distortion, need a transform to clamp the min max pixel value btw (0, 1)</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="NormClamp" class="doc_header"><code>class</code> <code>NormClamp</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L137" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>NormClamp</code>(<strong><code>mean</code></strong>=<em><code>(0.5, 0.5, 0.5)</code></em>, <strong><code>std</code></strong>=<em><code>(0.25, 0.25, 0.25)</code></em>, <strong><code>always_apply</code></strong>=<em><code>True</code></em>, <strong><code>p</code></strong>=<em><code>1.0</code></em>) :: <code>ImageOnlyTransform</code></p>
+</blockquote>
+<p>Transform applied to image only.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ClampPixel" class="doc_header"><code>class</code> <code>ClampPixel</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L151" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ClampPixel</code>(<strong><code>always_apply</code></strong>=<em><code>True</code></em>, <strong><code>p</code></strong>=<em><code>1.0</code></em>) :: <code>ImageOnlyTransform</code></p>
+</blockquote>
+<p>Transform applied to image only.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>Verify the image transformation works using Albumentation, especially random transform to both image and target.</p>
 
 </div>
@@ -174,7 +238,7 @@ Args:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="SubCocoDataModule" class="doc_header"><code>class</code> <code>SubCocoDataModule</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L128" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataModule</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>LightningDataModule</code></p>
+<h2 id="SubCocoDataModule" class="doc_header"><code>class</code> <code>SubCocoDataModule</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L163" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>SubCocoDataModule</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>LightningDataModule</code></p>
 </blockquote>
 <p>A DataModule standardizes the training, val, test splits, data preparation and transforms.
 The main advantage is consistent data splits, data preparation and transforms across models.</p>
@@ -210,6 +274,106 @@ The main advantage is consistent data splits, data preparation and transforms ac
 </ul>
 <p>This allows you to share a full dataset without explaining how to download,
 split transform and process the data</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Base-Abstract-Lightning-Module-For-Reuse-Across-Different-Neural-Architecture">Base Abstract Lightning Module For Reuse Across Different Neural Architecture<a class="anchor-link" href="#Base-Abstract-Lightning-Module-For-Reuse-Across-Different-Neural-Architecture"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="AbstractDetectorLightningModule" class="doc_header"><code>class</code> <code>AbstractDetectorLightningModule</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L196" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AbstractDetectorLightningModule</code>(<strong><code>num_classes</code></strong>=<em><code>1</code></em>, <strong><code>img_sz</code></strong>=<em><code>128</code></em>, <strong><code>model_train_loss</code></strong>=<em><code>True</code></em>, <strong><code>bs</code></strong>:<code>int</code>=<em><code>1</code></em>, <strong><code>steps_per_epoch</code></strong>:<code>int</code>=<em><code>0</code></em>, <strong><code>lr</code></strong>:<code>float</code>=<em><code>0.01</code></em>, <strong><code>noisy</code></strong>=<em><code>False</code></em>, <strong><code>calc_metrics</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>) :: <code>LightningModule</code></p>
+</blockquote>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Generic-Training-Runner">Generic Training Runner<a class="anchor-link" href="#Generic-Training-Runner"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="train_model" class="doc_header"><code>train_model</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L356" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>train_model</code>(<strong><code>model</code></strong>, <strong><code>model_name</code></strong>:<code>str</code>, <strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>img_dir</code></strong>:<code>str</code>, <strong><code>modeldir</code></strong>:<code>str</code>=<em><code>'models'</code></em>, <strong><code>lr</code></strong>=<em><code>0.01</code></em>, <strong><code>auto_lr_find</code></strong>=<em><code>False</code></em>, <strong><code>split_ratio</code></strong>=<em><code>0.95</code></em>, <strong><code>img_sz</code></strong>=<em><code>128</code></em>, <strong><code>bs</code></strong>=<em><code>1</code></em>, <strong><code>acc</code></strong>=<em><code>1</code></em>, <strong><code>workers</code></strong>=<em><code>1</code></em>, <strong><code>head_runs</code></strong>=<em><code>1</code></em>, <strong><code>full_runs</code></strong>=<em><code>1</code></em>, <strong><code>monitor</code></strong>=<em><code>'val_loss'</code></em>, <strong><code>mode</code></strong>=<em><code>'min'</code></em>, <strong><code>save_top</code></strong>=<em><code>-1</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="run_training" class="doc_header"><code>run_training</code><a href="https://github.com/bguan/mcbbox/tree/master/mcbbox/subcoco_lightning_utils.py#L442" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_training</code>(<strong><code>moduleClass</code></strong>:<a href="/mcbboxsubcoco_lightning_utils.html#AbstractDetectorLightningModule"><code>AbstractDetectorLightningModule</code></a>, <strong><code>backbone_name</code></strong>:<code>str</code>, <strong><code>stats</code></strong>:<a href="/mcbboxsubcoco_utils.html#CocoDatasetStats"><code>CocoDatasetStats</code></a>, <strong><code>img_dir</code></strong>:<code>str</code>, <strong><code>resume_ckpt_fname</code></strong>=<em><code>None</code></em>, <strong><code>split_ratio</code></strong>=<em><code>0.95</code></em>, <strong><code>modeldir</code></strong>:<code>str</code>=<em><code>'models'</code></em>, <strong><code>lr</code></strong>=<em><code>0.01</code></em>, <strong><code>auto_lr_find</code></strong>=<em><code>False</code></em>, <strong><code>img_sz</code></strong>=<em><code>128</code></em>, <strong><code>bs</code></strong>=<em><code>1</code></em>, <strong><code>acc</code></strong>=<em><code>1</code></em>, <strong><code>workers</code></strong>=<em><code>1</code></em>, <strong><code>head_runs</code></strong>=<em><code>1</code></em>, <strong><code>full_runs</code></strong>=<em><code>1</code></em>, <strong><code>monitor</code></strong>=<em><code>'val_loss'</code></em>, <strong><code>mode</code></strong>=<em><code>'min'</code></em>, <strong><code>save_top</code></strong>=<em><code>-1</code></em>, <strong><code>test</code></strong>=<em><code>True</code></em>, <strong><code>calc_metrics</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
 
 </div>
 

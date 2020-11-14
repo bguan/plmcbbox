@@ -46,7 +46,7 @@ from gpumonitor.monitor import GPUStatMonitor
 from icevision.core import BBox, ClassMap, BaseRecord
 from icevision.parsers import Parser
 from icevision.parsers.mixins import LabelsMixin, BBoxesMixin, FilepathMixin, SizeMixin
-from icevision.data import Dataset
+from icevision.data import Dataset, RandomSplitter
 from icevision.metrics.coco_metric import COCOMetricType, COCOMetric
 from icevision.utils import denormalize_imagenet
 from icevision.visualize.show_data import *
@@ -122,7 +122,7 @@ class SubCocoParser(Parser, LabelsMixin, BBoxesMixin, FilepathMixin, SizeMixin):
 # Cell
 def parse_subcoco(stats:CocoDatasetStats)->List[List[BaseRecord]]:
     parser = SubCocoParser(stats, min_width_height_ratio = 0.05) # no need min_margin_ratio = 0.05 as icevision autofix
-    train_records, valid_records = parser.parse(autofix=False)
+    train_records, valid_records = parser.parse(data_splitter=RandomSplitter([0.95, 0.05]), autofix=False)
     return train_records, valid_records
 
 # Cell
@@ -140,7 +140,7 @@ class SaveModelDupBestCallback(SaveModelCallback):
         if self.new_best or self.epoch==0:
             last_saved = self.last_saved_path
             saved_stem = last_saved.stem
-            backup_stem = f'{saved_stem}@{self.epoch:03d}_{self.monitor}={self.best:.3f}'
+            backup_stem = f'{saved_stem}_e{self.epoch:03d}_m{self.best:.3f}'
             backup_file = backup_stem+(last_saved.suffix)
             backup_path = last_saved.parent / backup_file
             print(f'Backup {last_saved} as {backup_path}')
@@ -204,7 +204,13 @@ def gen_transforms_and_learner(stats:CocoDatasetStats,
 
 # Cell
 # Wrap in function this doesn't run upon import or when generating docs
-def run_training(learn:Learner, min_lr=0.01, head_runs=1, full_runs=1):
+def run_training(learn:Learner, resume_ckpt:Path, min_lr=0.005, head_runs=1, full_runs=1):
+    if resume_ckpt:
+        print(f'Loading {resume_ckpt}...')
+        try:
+            learn.model.load_state_dict(torch.load(resume_ckpt))
+        except Exception as e:
+            print(f'Error while trying to load {resume_ckpt}: {e}')
     monitor.display_average_stats_per_gpu()
     print(f"Training for {head_runs}+{full_runs} epochs at min LR {min_lr}")
     learn.fine_tune(full_runs, min_lr, freeze_epochs=head_runs)
