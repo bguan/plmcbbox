@@ -34,7 +34,6 @@ import icevision
 import icevision.backbones as backbones
 import icevision.models
 import icevision.models.efficientdet as efficientdet
-import icevision.models.rcnn.faster_rcnn as faster_rcnn
 import icevision.tfms as tfms
 
 from albumentations import ShiftScaleRotate
