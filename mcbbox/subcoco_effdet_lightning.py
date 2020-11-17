@@ -126,20 +126,18 @@ class EffDetModule(AbstractDetectorLightningModule):
         # turn off auto gradient for validation step
         with torch.no_grad():
             xs, ys = val_batch
-#             predictor = DetBenchPredict(unwrap_bench(self.model))
-#             predictor.cuda()
-#             raw_preds = predictor(torch.stack(xs).cuda())
-#             preds = self.convert_raw_predictions(raw_preds)
-#             metrics = self.metrics(preds, ys)
+            predictor = DetBenchPredict(unwrap_bench(self.model))
+            predictor.cuda()
+            raw_preds = predictor(torch.stack(xs).cuda())
+            preds = self.convert_raw_predictions(raw_preds)
+            metrics = self.metrics(preds, ys)
             bench = DetBenchTrain(unwrap_bench(self.model))
             bench.cuda()
             target = self.pack_target(ys)
             xs_stack = self.stack_images(xs)
             losses = bench(xs_stack, target)['loss']
 
-        result = { 'val_loss': losses,
-#             'val_acc': metrics[:]['val_acc'].mean(),  'val_coco': metrics[:]['val_coco'.mean(),
-        }
+        result = { 'val_loss': losses, 'val_acc': metrics[:,0].mean(),  'val_coco': metrics[:,1].mean() }
         if self.noisy: print(f'Exiting validation_step, returning {result}')
         return result
 

@@ -285,7 +285,8 @@ class AbstractDetectorLightningModule(LightningModule):
     def metrics(self, preds, targets):
         metrics = torch.zeros((min(len(preds), len(targets)), 2))
         for i, (p,t) in enumerate(zip(preds, targets)):
-            metrics[i] = {'val_acc': calc_wavg_F1(p, t, .5, .5), 'val_coco': SubCocoWrapper(p, t, self.img_sz, self.img_sz).metrics()[0] }
+            metrics[i,0] = calc_wavg_F1(p, t, .5, .5)
+            metrics[i,1] = SubCocoWrapper(p, t, self.img_sz, self.img_sz).metrics()[0]
         return metrics
 
     def training_step(self, train_batch, batch_idx):
@@ -299,13 +300,6 @@ class AbstractDetectorLightningModule(LightningModule):
             losses = sum(losses.values())
         if self.noisy: print(f'Exiting training_step, returning {losses}')
         return losses
-
-    def metrics(self, preds, targets):
-        metrics = torch.zeros((min(len(preds), len(targets)), 2))
-        for i, (p,t) in enumerate(zip(preds, targets)):
-            metrics[i,0] = calc_wavg_F1(p, t, .5, .5)
-            metrics[i,1] = SubCocoWrapper(p, t, self.img_sz, self.img_sz).metrics()[0]
-        return metrics
 
     def validation_step(self, val_batch, batch_idx):
         if self.noisy: print('Entering validation_step')
@@ -323,8 +317,8 @@ class AbstractDetectorLightningModule(LightningModule):
 
         result = {'val_loss': losses}
         if self.calc_metrics:
-            result['val_acc'] = metrics[:]['val_acc'].mean()
-            result['val_coco'] = metrics[:]['val_coco'].mean()
+            result['val_acc'] = metrics[:,0].mean()
+            result['val_coco'] = metrics[:,1].mean()
 
         if self.noisy: print(f'Exiting validation_step, returning {result}')
         return result
@@ -356,7 +350,7 @@ class AbstractDetectorLightningModule(LightningModule):
 def train_model(model, model_name:str, stats:CocoDatasetStats, img_dir:str,
         modeldir:str='models', lr=0.01, auto_lr_find=False, split_ratio=0.95,
         img_sz=128, bs=1, acc=1, workers=1, head_runs=1, full_runs=1,
-        monitor='val_loss', mode='min', save_top=-1):
+        monitor='val_loss', mode='min', save_top=-1, patience=5):
 
     print(f"Training with image size {img_sz}, learning rate {lr}, for {head_runs}+{full_runs} epochs.")
 
@@ -406,7 +400,7 @@ def train_model(model, model_name:str, stats:CocoDatasetStats, img_dir:str,
     early_stop_cb = EarlyStopping(
        monitor=monitor,
        min_delta=0.001,
-       patience=5,
+       patience=patience,
        verbose=True,
        mode=mode
     )
@@ -441,9 +435,9 @@ def train_model(model, model_name:str, stats:CocoDatasetStats, img_dir:str,
 
 def run_training(moduleClass:AbstractDetectorLightningModule, backbone_name:str, stats:CocoDatasetStats, img_dir:str,
                  resume_ckpt_fname=None, split_ratio=0.95, modeldir:str='models', lr=0.01, auto_lr_find=False, img_sz=128, bs=1, acc=1, workers=1,
-                 head_runs=1, full_runs=1, monitor='val_loss', mode='min', save_top=-1, test=True, calc_metrics=False):
+                 head_runs=1, full_runs=1, monitor='val_loss', mode='min', save_top=-1, test=True, calc_metrics=False, patience=5):
 
-    print(f"Training with image size {img_sz}, learning rate {lr}, for {head_runs}+{full_runs} epochs.")
+    print(f"Training with image size {img_sz}, learning rate {lr}, patience = {patience}, for {head_runs}+{full_runs} epochs.")
 
     steps_per_epoch = int(stats.num_imgs*split_ratio)
     is_new_run = True
@@ -455,17 +449,17 @@ def run_training(moduleClass:AbstractDetectorLightningModule, backbone_name:str,
                 print(f'Loading previously saved model: {resume_ckpt}...')
                 model = moduleClass.load_from_checkpoint(
                     resume_ckpt, backbone_name=backbone_name, bs=bs, steps_per_epoch=steps_per_epoch, lr=lr,
-                    num_classes=len(stats.lbl2name), img_sz=img_sz, noisy = test)
+                    num_classes=len(stats.lbl2name), img_sz=img_sz, noisy = test, calc_metrics=calc_metrics,)
                 is_new_run = False
             except Exception as e:
                 print(f'Unexpected error loading previously saved model {resume_ckpt}: {e}')
         else: print(f'Failed to find {resume_ckpt}')
 
     if is_new_run:
-        model = moduleClass(backbone_name=backbone_name, bs=bs, lr=lr,
+        model = moduleClass(backbone_name=backbone_name, bs=bs, lr=lr, calc_metrics=calc_metrics,
             steps_per_epoch=steps_per_epoch, num_classes=len(stats.lbl2name), img_sz=img_sz, noisy = test)
 
     return train_model(model, backbone_name, stats, img_dir,
             lr=lr, auto_lr_find=auto_lr_find, split_ratio=split_ratio, modeldir=modeldir,
             img_sz=img_sz, bs=bs, acc=acc, workers=workers, head_runs=head_runs, full_runs=full_runs,
-            monitor=monitor, mode=mode, save_top=save_top)
+            monitor=monitor, mode=mode, save_top=save_top, patience=patience)

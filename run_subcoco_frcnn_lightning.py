@@ -11,9 +11,8 @@ stats = load_stats(train_json, img_dir=img_dir, force_reload=False)
 
 img_sz=128 #512
 frcnn_model, last_save_fname = run_training(
-        stats, 'models', img_dir, resume_ckpt_fname='FRCNN-{froot}-{img_sz}-last.ckpt', img_sz=img_sz, 
-        bs=2, acc=16, workers=4, head_runs=1, full_runs=1,
-        monitor='val_loss', mode='min', save_top=-1)
+        stats, 'models', img_dir, resume_ckpt_fname='FRCNN-{froot}-{img_sz}-last.ckpt', img_sz=img_sz, bs=2, acc=16, workers=4, head_runs=1, full_runs=1,
+        monitor='val_acc', mode='max', save_top=-1, calc_metrics=True, patience=10)
 model_save_path = f"models/FRCNN-{froot}-{img_sz}-last.saved"
 save_final(frcnn_model, model_save_path)
 sys.exit(f'Run ended, model saved to {model_save_path}')
